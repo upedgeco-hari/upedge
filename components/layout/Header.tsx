@@ -79,10 +79,10 @@ export function Header() {
       <div className="px-[var(--gutter)] pt-4">
         <div
           className={cn(
-            "mx-auto flex h-14 max-w-[var(--container)] items-center justify-between rounded-full pl-6 pr-1.5 transition-[background-color,box-shadow,color,backdrop-filter] duration-700 ease-smooth",
+            "mx-auto flex h-14 max-w-[var(--container)] items-center justify-between rounded-full pl-6 pr-1.5 transition-[background-color,box-shadow,color,backdrop-filter] duration-[400ms] ease-smooth",
             light ? "text-on-inverse" : "text-ink",
             scrolled && !open
-              ? "bg-paper/80 shadow-[0_8px_32px_-12px_rgb(13_13_13/0.2),inset_0_0_0_1px_var(--line)] backdrop-blur-xl"
+              ? "bg-paper/95 shadow-[0_8px_32px_-12px_rgb(13_13_13/0.2),inset_0_0_0_1px_var(--line)] backdrop-blur-xl"
               : "bg-transparent",
           )}
         >
