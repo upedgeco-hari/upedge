@@ -1,0 +1,259 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+
+/* Map tokens to Tailwind utilities (bg-paper, text-ink, border-line, ...) */
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-deep: var(--accent-deep);
+  --color-accent-tint: var(--accent-tint);
+  --color-inverse: var(--inverse);
+  --color-inverse-2: var(--inverse-2);
+  --color-on-inverse: var(--on-inverse);
+  --color-on-inverse-muted: var(--on-inverse-muted);
+  --color-line-inverse: var(--line-inverse);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: var(--radius-card);
+  --radius-inner: var(--radius-inner);
+  --radius-input: var(--radius-input);
+
+  --ease-out-expo: var(--ease-out-expo);
+  --ease-smooth: var(--ease-smooth);
+}
+
+@layer base {
+  html {
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: calc(var(--header-h) + 2rem);
+  }
+  body {
+    min-height: 100dvh;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  .on-inverse :focus-visible,
+  [data-inverse] :focus-visible {
+    outline-color: var(--accent);
+  }
+  img,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
+  }
+}
+
+/* Lenis smooth-scroll support */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Type scale */
+@utility display-1 {
+  font-size: clamp(2.375rem, 1.4rem + 5.2vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-weight: 500;
+}
+@utility display-2 {
+  font-size: clamp(2rem, 1.2rem + 3.4vw, 4rem);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  font-weight: 500;
+}
+@utility display-3 {
+  font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.5rem);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  font-weight: 500;
+}
+@utility lead {
+  font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.3125rem);
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 62ch;
+}
+@utility eyebrow {
+  font-size: 0.75rem;
+  line-height: 1;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Layout helpers */
+@utility container-x {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+@utility section-y {
+  padding-block: clamp(5rem, 3rem + 8vw, 10rem);
+}
+
+/* Page-to-page fade (see app/template.tsx) */
+/* Start at 0.01, not 0: Chrome ignores opacity:0 elements when picking the LCP candidate. */
+@keyframes page-in {
+  from {
+    opacity: 0.01;
+  }
+}
+.page-in {
+  animation: page-in 0.4s var(--ease-smooth) both;
+}
+
+/* Scroll reveal (see components/ui/Reveal.tsx). Shown immediately without JS or with reduced motion. */
+.reveal {
+  opacity: 0;
+  transform: translateY(var(--y, 28px));
+  filter: blur(6px);
+  transition:
+    opacity 0.9s var(--ease-out-expo) var(--d, 0s),
+    transform 0.9s var(--ease-out-expo) var(--d, 0s),
+    filter 0.9s var(--ease-out-expo) var(--d, 0s);
+}
+.reveal[data-in] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+@media (scripting: none), (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+/* Above-the-fold entrance (CSS only, see components/ui/Rise.tsx) */
+@keyframes rise {
+  from {
+    opacity: 0.01;
+    transform: translateY(28px);
+  }
+}
+.rise {
+  animation: rise 0.9s var(--ease-out-expo) var(--d, 0s) both;
+}
+
+/* Service-area marquee (see components/home/ServiceAreas.tsx): two bands of duplicated
+   text scroll in opposite directions; words are stroke-outlined and fill solid on hover.
+   Reduced motion is handled by the global rule above (animation collapses to its un-animated
+   base position, since no fill-mode is set). */
+@keyframes marquee-left {
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes marquee-right {
+  from {
+    transform: translateX(-50%);
+  }
+}
+.marquee-row {
+  overflow: hidden;
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-left var(--marquee-duration, 40s) linear infinite;
+}
+.marquee-track[data-dir="right"] {
+  animation-name: marquee-right;
+}
+.place-word {
+  color: transparent;
+  -webkit-text-stroke: 1.25px var(--line-strong);
+  transition:
+    color 0.4s var(--ease-smooth),
+    -webkit-text-stroke-color 0.4s var(--ease-smooth);
+}
+.place-word:hover,
+.place-word[data-active="true"] {
+  color: var(--ink);
+  -webkit-text-stroke-color: var(--ink);
+}
+
+/* Hairline image frame (outer shell of the double-bezel) */
+@utility bezel {
+  padding: 0.375rem;
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--ink) 5%, transparent);
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+/* Hide scrollbars on horizontal strips */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Skip link */
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: -4rem;
+  z-index: var(--z-modal);
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 500;
+  transition: top 0.2s var(--ease-out-expo);
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
