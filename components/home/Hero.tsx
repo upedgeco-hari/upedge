@@ -15,7 +15,7 @@ export function Hero() {
       </div>
 
       {/* Portrait: contained card below lg, positioned cutout beside the headline from lg up. */}
-      <div className="relative z-10 order-2 mx-auto mt-6 aspect-4/5 w-[85%] max-w-80 overflow-hidden rounded-4xl lg:absolute lg:inset-y-0 lg:right-[2%] lg:order-0 lg:mx-0 lg:mt-0 lg:mb-0 lg:aspect-auto lg:w-[38%] lg:max-w-none lg:rounded-none xl:right-[3%] xl:w-[36%]">
+      <div className="relative z-10 order-2 mx-auto mt-6 aspect-4/5 w-[70%] max-w-64 overflow-hidden rounded-4xl lg:absolute lg:inset-y-0 lg:right-[2%] lg:order-0 lg:mx-0 lg:mt-0 lg:mb-0 lg:aspect-auto lg:w-[38%] lg:max-w-none lg:rounded-none xl:right-[3%] xl:w-[36%]">
         <Image
           src="/images/hero-portrait.png"
           alt="Hariharan"
@@ -26,7 +26,7 @@ export function Hero() {
         />
       </div>
 
-      <div className="container-x relative z-10 order-3 mt-8 pb-10 lg:order-0 lg:mt-0 lg:pb-14">
+      <div className="container-x relative z-10 order-3 mt-4 pb-10 lg:order-0 lg:mt-0 lg:pb-14">
         <Rise className="max-w-6xl lg:max-w-md xl:max-w-xl">
           <h1 className="display-1 text-balance">A Pinnacle Of Premium Construction.</h1>
         </Rise>
