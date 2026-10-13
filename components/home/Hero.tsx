@@ -22,7 +22,7 @@ export function Hero() {
           fill
           quality={100}
           sizes="(min-width: 1280px) 34vw, (min-width: 1024px) 36vw, 340px"
-          className="object-cover"
+          className="object-cover object-top"
         />
       </div>
 
