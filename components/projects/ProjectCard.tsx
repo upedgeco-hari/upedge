@@ -49,7 +49,7 @@ export function ProjectCard({ project, aspect = "aspect-[4/3]", sizes = "(min-wi
       onFocus={start}
       onBlur={stop}
     >
-      <div className="bezel">
+      <div className="bezel group-hover:-translate-y-1 group-hover:shadow-[inset_0_0_0_1px_var(--line),var(--elev-4)]">
         <div className={cn("relative overflow-hidden rounded-inner", aspect)}>
           <div className="absolute inset-0 transition-transform duration-[1200ms] ease-out-expo group-hover:scale-[1.04]">
             <CloudImage media={project.cover} sizes={sizes} priority={priority} />
@@ -87,12 +87,12 @@ export function ProjectCard({ project, aspect = "aspect-[4/3]", sizes = "(min-wi
       <div className="mt-5 flex items-start justify-between gap-6 px-1">
         <div>
           <h3 className="text-xl font-medium tracking-tight sm:text-2xl">{project.title}</h3>
-          <p className="mt-1 text-sm text-muted">
+          <p className="mt-2 text-sm text-muted">
             {project.category}, {project.location}
           </p>
         </div>
-        <span className="mt-1 grid size-10 shrink-0 place-items-center rounded-full bg-ink/5 transition-colors duration-500 ease-smooth group-hover:bg-accent" aria-hidden="true">
-          <ArrowUpRight size={18} weight="light" className="transition-transform duration-500 ease-smooth group-hover:-translate-y-px group-hover:translate-x-0.5" />
+        <span className="mt-1 grid size-10 shrink-0 place-items-center rounded-full bg-ink/5 transition-[background-color,box-shadow] duration-[var(--dur-3)] ease-smooth group-hover:bg-accent group-hover:shadow-accent" aria-hidden="true">
+          <ArrowUpRight size={18} weight="light" className="transition-transform duration-[var(--dur-3)] ease-spring group-hover:-translate-y-px group-hover:translate-x-0.5" />
         </span>
       </div>
     </Link>

@@ -25,7 +25,7 @@ export function ProjectStory({ project }: { project: Project }) {
   const { images } = project;
   const n = images.length;
   const reduce = useReducedMotion();
-  const desktop = useMediaQuery("(min-width: 768px)", true);
+  const desktop = useMediaQuery("(min-width: 1024px)", true);
   const [mode, setMode] = useState<"scroll" | "browse">("scroll");
   const [manual, setManual] = useState(0);
   const [scrollIdx, setScrollIdx] = useState(0);
@@ -92,7 +92,7 @@ export function ProjectStory({ project }: { project: Project }) {
       ref={sectionRef}
       aria-roledescription="carousel"
       aria-label={`${project.title} construction story`}
-      className="relative h-[100dvh] md:h-[var(--story-h)]"
+      className="relative h-[100dvh] lg:h-[var(--story-h)]"
       style={{ ["--story-h" as string]: mode === "scroll" ? `${n * 100}dvh` : "100dvh" }}
     >
       <div className="sticky top-0 h-[100dvh] overflow-hidden bg-inverse text-on-inverse" data-inverse>
@@ -126,13 +126,13 @@ export function ProjectStory({ project }: { project: Project }) {
         />
 
         {/* Top bar */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between px-[var(--gutter)] pt-24">
+        <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between px-[var(--gutter)] pt-24 [@media(max-height:560px)]:pt-20">
           <p className="max-w-[24ch] text-sm text-on-inverse/85 sm:max-w-none">
             {project.title}
             <span className="text-on-inverse-muted"> / {project.category}</span>
           </p>
           <div className="pointer-events-auto flex items-center gap-2">
-            <div role="group" aria-label="Viewing mode" className="hidden rounded-full bg-on-inverse/12 p-1 backdrop-blur-md md:flex">
+            <div role="group" aria-label="Viewing mode" className="hidden rounded-full bg-on-inverse/12 p-1 backdrop-blur-md lg:flex">
               {(["scroll", "browse"] as const).map((m) => (
                 <button
                   key={m}
@@ -155,7 +155,7 @@ export function ProjectStory({ project }: { project: Project }) {
         </div>
 
         {/* Stage, counter, caption */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col gap-8 px-[var(--gutter)] pb-10 sm:pb-12 lg:flex-row lg:items-end lg:justify-between">
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col gap-8 px-[var(--gutter)] pb-10 sm:pb-12 lg:flex-row lg:items-end lg:justify-between [@media(max-height:560px)]:gap-4 [@media(max-height:560px)]:pb-6">
           <div className="max-w-2xl">
             <p className="tabular text-sm text-on-inverse/85" aria-live="polite">
               <span className="font-medium text-on-inverse">{pad(active + 1)}</span> / {pad(n)}
@@ -164,7 +164,7 @@ export function ProjectStory({ project }: { project: Project }) {
               <AnimatePresence mode="wait" initial={false}>
                 <motion.h2
                   key={current.stage + active}
-                  className="display-2"
+                  className="display-2 [@media(max-height:560px)]:text-3xl!"
                   initial={reduce ? false : { y: "100%" }}
                   animate={{ y: 0 }}
                   exit={reduce ? undefined : { y: "-100%" }}
@@ -174,7 +174,7 @@ export function ProjectStory({ project }: { project: Project }) {
                 </motion.h2>
               </AnimatePresence>
             </div>
-            <p className="mt-4 min-h-[3.5rem] max-w-[48ch] text-on-inverse/85">{current.caption}</p>
+            <p className="measure mt-4 min-h-[3.5rem] text-on-inverse/85 [@media(max-height:560px)]:hidden">{current.caption}</p>
           </div>
 
           <div className="pointer-events-auto flex flex-col items-start gap-5 pr-16 lg:items-end">
@@ -187,7 +187,7 @@ export function ProjectStory({ project }: { project: Project }) {
                     aria-label={`Go to ${pad(i + 1)}, ${img.stage}`}
                     aria-current={i === active}
                     className={cn(
-                      "relative block h-12 w-[4.25rem] shrink-0 overflow-hidden rounded-lg transition-[opacity,box-shadow] duration-500 ease-smooth",
+                      "relative block h-12 w-[4.25rem] shrink-0 overflow-hidden rounded-chip transition-[opacity,box-shadow] duration-500 ease-smooth",
                       i === active ? "opacity-100 shadow-[0_0_0_2px_var(--accent)]" : "opacity-60 hover:opacity-100",
                     )}
                   >

@@ -19,17 +19,17 @@ export default function BlogPage() {
   return (
     <>
       <PageHero title="Notes on building well" lead="Practical guidance on planning, budgeting and building, written for people about to start a project." />
-      <section className="container-x pb-28 sm:pb-40">
+      <section className="section-pb container-x">
         <Rise>
-          <Link href={`/blog/${lead.slug}`} className="group grid gap-8 lg:grid-cols-12 lg:items-center">
-            <div className="bezel lg:col-span-7">
+          <Link href={`/blog/${lead.slug}`} className="group grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-8">
+            <div className="bezel lg:col-span-6">
               <div className="relative aspect-[16/9] overflow-hidden rounded-inner">
                 <div className="absolute inset-0 transition-transform duration-[1200ms] ease-out-expo group-hover:scale-[1.04]">
-                  <CloudImage media={lead.cover} sizes="(min-width: 1024px) 58vw, 100vw" priority />
+                  <CloudImage media={lead.cover} sizes="(min-width: 1024px) 50vw, 100vw" priority />
                 </div>
               </div>
             </div>
-            <div className="lg:col-span-5">
+            <div className="lg:col-span-5 lg:col-start-8">
               <p className="text-sm text-muted">
                 {lead.category}, {fmt(lead.date)}
               </p>
@@ -40,7 +40,7 @@ export default function BlogPage() {
           </Link>
         </Rise>
 
-        <ul className="mt-24 grid gap-x-8 gap-y-14 md:grid-cols-2">
+        <ul className="section-pt grid gap-x-8 gap-y-16 md:grid-cols-2">
           {rest.map((p, i) => (
             <Reveal as="li" key={p.slug} delay={(i % 2) * 0.08}>
               <Link href={`/blog/${p.slug}`} className="group block">
@@ -55,7 +55,7 @@ export default function BlogPage() {
                   {p.category}, {fmt(p.date)}
                 </p>
                 <h2 className="display-3 mt-2 text-balance">{p.title}</h2>
-                <p className="mt-3 max-w-[52ch] text-ink-2">{p.excerpt}</p>
+                <p className="measure mt-3 text-ink-2">{p.excerpt}</p>
               </Link>
             </Reveal>
           ))}

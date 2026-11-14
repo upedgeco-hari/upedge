@@ -6,7 +6,7 @@ import { useState } from "react";
 import type { Testimonial } from "@/lib/types";
 
 const round =
-  "grid size-12 place-items-center rounded-full shadow-[inset_0_0_0_1px_var(--line-strong)] transition-[background-color,color,transform] duration-500 ease-smooth hover:bg-ink hover:text-paper active:scale-95";
+  "grid size-12 place-items-center rounded-full shadow-[inset_0_0_0_1px_var(--line-strong)] transition-[background-color,color,transform,box-shadow] duration-[var(--dur-3)] ease-smooth hover:bg-ink hover:text-paper hover:shadow-[inset_0_0_0_1px_var(--ink),var(--elev-3)] active:scale-95";
 
 /** One large quote at a time. Quotes are capped at three lines by the data, not by CSS tricks. */
 export function Testimonials({ items }: { items: Testimonial[] }) {
@@ -16,35 +16,53 @@ export function Testimonials({ items }: { items: Testimonial[] }) {
   const go = (d: number) => setI((i + d + items.length) % items.length);
 
   return (
-    <section className="section-y border-t border-line" aria-roledescription="carousel" aria-label="Client testimonials">
+    <section className="section-y edge-top" aria-roledescription="carousel" aria-label="Client testimonials">
       <div className="container-x">
-        <h2 className="display-3 max-w-xl">What clients say</h2>
+        <div className="flex flex-wrap items-baseline justify-between gap-4">
+          <h2 className="display-3 max-w-3xl text-balance">What clients say</h2>
+          <p className="index-num tabular text-muted">
+            {String(i + 1).padStart(2, "0")}
+            <span className="mx-1.5 text-line-strong">/</span>
+            {String(items.length).padStart(2, "0")}
+          </p>
+        </div>
 
-        <div className="mt-12 grid gap-10 lg:grid-cols-12">
-          <div className="min-h-[15rem] lg:col-span-9">
+        <div className="block-gap grid gap-12 lg:grid-cols-12 lg:gap-8">
+          <div className="relative min-h-60 lg:col-span-8">
+            {/* Oversized quote glyph, set in the accent and clipped by the type above it. */}
+            <span
+              className="pointer-events-none absolute -left-1 -top-8 select-none text-[7rem] leading-none text-accent/12 sm:-left-2 sm:-top-16 sm:text-[12rem] lg:-top-24 lg:text-[16rem]"
+              aria-hidden="true"
+            >
+              &ldquo;
+            </span>
             <AnimatePresence mode="wait" initial={false}>
               <motion.figure
                 key={i}
-                initial={reduce ? false : { opacity: 0, y: 20 }}
+                className="relative"
+                initial={reduce ? false : { opacity: 0, y: 22 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={reduce ? undefined : { opacity: 0, y: -12 }}
-                transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+                exit={reduce ? undefined : { opacity: 0, y: -14 }}
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                 aria-live="polite"
               >
-                <blockquote className="display-3 max-w-[30ch] text-balance sm:max-w-[36ch]">
+                <blockquote className="display-3 measure-quote text-balance">
                   &ldquo;{t.quote}&rdquo;
                 </blockquote>
-                <figcaption className="mt-8 text-muted">
-                  <span className="font-medium text-ink">{t.name}</span>
-                  <br />
-                  {t.role}
-                  {t.project ? `, ${t.project}` : ""}
+                <figcaption className="mt-8 flex items-center gap-4 text-muted">
+                  <span className="h-px w-9 shrink-0 bg-accent" aria-hidden="true" />
+                  <span>
+                    <span className="font-medium text-ink">{t.name}</span>
+                    <br />
+                    {t.role}
+                    {t.project ? `, ${t.project}` : ""}
+                  </span>
                 </figcaption>
               </motion.figure>
             </AnimatePresence>
           </div>
 
-          <div className="flex items-end gap-3 lg:col-span-3 lg:justify-end">
+          <div className="flex items-end gap-3 lg:col-span-3 lg:col-start-10 lg:justify-end">
             <button type="button" className={round} aria-label="Previous testimonial" onClick={() => go(-1)}>
               <ArrowLeft size={20} weight="light" />
             </button>

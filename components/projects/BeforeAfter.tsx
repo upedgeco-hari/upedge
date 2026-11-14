@@ -24,7 +24,7 @@ export function BeforeAfter({ before, after }: { before: Media; after: Media }) 
         </motion.div>
 
         <motion.div className="pointer-events-none absolute inset-y-0 w-px bg-on-inverse" style={{ left }} aria-hidden="true">
-          <span className="absolute left-1/2 top-1/2 grid size-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-accent text-accent-ink shadow-[0_8px_24px_-8px_rgb(13_13_13/0.5)]">
+          <span className="absolute left-1/2 top-1/2 grid size-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-accent text-accent-ink shadow-accent">
             <ArrowsHorizontal size={22} weight="light" />
           </span>
         </motion.div>
@@ -40,7 +40,7 @@ export function BeforeAfter({ before, after }: { before: Media; after: Media }) 
           defaultValue={50}
           aria-label="Drag to compare before and after"
           onChange={(e) => pos.set(Number(e.target.value))}
-          className="absolute inset-0 h-full w-full cursor-ew-resize opacity-0"
+          className="absolute inset-0 h-full w-full cursor-ew-resize touch-pan-y opacity-0"
         />
       </div>
     </div>

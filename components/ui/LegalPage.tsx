@@ -7,7 +7,7 @@ export function LegalPage({ title, updated, sections }: { title: string; updated
   return (
     <>
       <PageHero title={title} lead={`Last updated: ${updated}`} />
-      <div className="container-x pb-28 sm:pb-40">
+      <div className="section-pb container-x">
         <div className="mx-auto max-w-[44rem] space-y-12">
           <p className="rounded-card bg-accent-tint p-5 text-sm text-ink">
             This is a starting template, not legal advice. Have it reviewed by a qualified professional and complete every [BRACKETED] item before launch.

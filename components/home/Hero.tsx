@@ -1,32 +1,77 @@
 import Image from "next/image";
+import { ChevronPattern } from "@/components/media/ChevronPattern";
 import { Button } from "@/components/ui/Button";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { Rise } from "@/components/ui/Rise";
-import { cta } from "@/data/site";
+import { cta, site } from "@/data/site";
 
 /** Full-bleed hero. Headline, one line of support, two CTAs, and a portrait on wide screens. */
 export function Hero() {
   return (
-    <section className="relative isolate flex flex-col overflow-hidden bg-inverse text-on-inverse lg:min-h-dvh lg:items-end" data-inverse>
+    <section
+      className="relative isolate flex flex-col overflow-hidden bg-inverse text-on-inverse lg:min-h-dvh lg:items-end"
+      data-inverse
+    >
+      {/*
+       * Depth, so the block is a lit room rather than a flat swatch: warm light pools, the
+       * brand chevron at a whisper, and a vignette that pulls the corners down. Negative
+       * z-index paints above the section background but under all the content.
+       *
+       * The two light rigs are separate because the layout is, not because of styling
+       * convenience. From lg up the section is the full viewport and the cutout stands on
+       * the right, so vh sizing and a top-right origin line up. On a phone the section is
+       * only as tall as its content and the portrait sits in the middle of a vertical
+       * stack, so the same values put the light above everything and leave the portrait
+       * flat. Sizing in vw and anchoring to the portrait fixes that.
+       */}
+      <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+        <div className="lg:hidden">
+          <div className="glow drift left-1/2 top-[4%] size-[112vw] -translate-x-1/2 text-accent opacity-[0.2]" />
+          <div className="glow -right-[28vw] bottom-[6%] size-[72vw] text-accent opacity-[0.1]" />
+        </div>
+        <div className="hidden lg:block">
+          <div className="glow drift -top-[18%] -right-[14%] size-[62vh] text-accent opacity-[0.22]" />
+          <div className="glow -bottom-[18%] -left-[12%] size-[48vh] text-accent opacity-[0.09]" />
+        </div>
+        <ChevronPattern className="text-on-inverse opacity-[0.035]" />
+        {/* Vignette follows the light: centred over the portrait on a phone, over the
+            cutout from lg up, and gentler on the phone so it does not wash the glow out. */}
+        <div className="absolute inset-0 bg-[radial-gradient(115%_75%_at_50%_14%,transparent_44%,rgb(0_0_0/0.5))] lg:bg-[radial-gradient(130%_100%_at_72%_8%,transparent_38%,rgb(0_0_0/0.62))]" />
+      </div>
+
       <div className="container-x relative z-10 order-1 pt-24 lg:order-0 lg:pt-40">
-        <p className="mb-4 text-sm font-medium uppercase tracking-[0.2em] text-on-inverse/70">
-          Hariharan
-        </p>
+        <Rise className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <span className="flex items-center gap-3">
+            <span className="h-px w-9 bg-accent" aria-hidden="true" />
+            <span className="eyebrow text-on-inverse">Hariharan</span>
+          </span>
+          <span className="eyebrow text-on-inverse-muted">
+            {site.city}, {site.region}
+          </span>
+        </Rise>
       </div>
 
       {/* Portrait: contained card below lg, positioned cutout beside the headline from lg up. */}
-      <div className="relative z-10 order-2 mx-auto mt-6 aspect-4/5 w-[70%] max-w-64 overflow-hidden rounded-4xl lg:absolute lg:inset-y-0 lg:right-[2%] lg:order-0 lg:mx-0 lg:mt-0 lg:mb-0 lg:aspect-auto lg:w-[38%] lg:max-w-none lg:rounded-none xl:right-[3%] xl:w-[36%]">
+      <div className="relative z-10 order-2 mx-auto mt-6 aspect-[2/3] w-[70%] max-w-64 overflow-hidden rounded-card sm:max-w-xs md:max-w-sm lg:absolute lg:inset-y-0 lg:right-[max(2%,calc((100%-var(--container))/2))] lg:order-0 lg:mx-0 lg:mt-0 lg:mb-0 lg:aspect-auto lg:w-[38%] lg:max-w-none lg:rounded-none xl:w-[36%] xl:max-w-[44rem]">
         <Image
-          src="/images/hero-portrait.png"
+          src="/images/hero-portrait.webp"
           alt="Hariharan"
           fill
-          quality={100}
-          sizes="(min-width: 1280px) 34vw, (min-width: 1024px) 36vw, 340px"
+          priority
+          quality={85}
+          sizes="(min-width: 1280px) 36vw, (min-width: 1024px) 38vw, (min-width: 768px) 384px, 320px"
           className="object-contain object-bottom"
         />
       </div>
 
+      {/* Grounds the cutout on wide screens, where it stands on the floor of the section. */}
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-10 hidden h-44 bg-gradient-to-t from-inverse via-inverse/55 to-transparent lg:block"
+        aria-hidden="true"
+      />
+
       <div className="container-x relative z-10 order-3 mt-4 pb-10 lg:order-0 lg:mt-0 lg:pb-14">
+        {/* No entrance delay on the headline: it is the LCP element. */}
         <Rise className="max-w-6xl lg:max-w-md xl:max-w-xl">
           <h1 className="display-1 text-balance">A Pinnacle Of Premium Construction.</h1>
         </Rise>

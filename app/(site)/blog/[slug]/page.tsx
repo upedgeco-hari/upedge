@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { CtaBanner } from "@/components/home/CtaBanner";
 import { CloudImage } from "@/components/media/CloudImage";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { BackLink } from "@/components/ui/BackLink";
 import { Reveal } from "@/components/ui/Reveal";
 import { getPost, posts } from "@/data/posts";
 import { site } from "@/data/site";
@@ -43,7 +44,10 @@ export default async function PostPage({ params }: Props) {
     <>
       <article>
         <header className="container-x pb-12 pt-32">
-          <Reveal className="mx-auto max-w-3xl">
+          <Reveal className="mx-auto max-w-[44rem]">
+            <div className="mb-8">
+              <BackLink href="/blog">All articles</BackLink>
+            </div>
             <p className="text-sm text-muted">
               {post.category}, {fmt(post.date)}, {post.readingMinutes} min read
             </p>
@@ -60,7 +64,7 @@ export default async function PostPage({ params }: Props) {
           </div>
         </div>
 
-        <div className="container-x pb-24 pt-14 sm:pb-32 sm:pt-20">
+        <div className="section-pb container-x pt-14 sm:pt-20">
           <div className="mx-auto max-w-[44rem] space-y-6 text-[1.0625rem] leading-[1.75] text-ink-2">
             {post.body.map((b, i) => {
               if (b.type === "h2") return <h2 key={i} className="display-3 pt-6 text-ink">{b.text}</h2>;
@@ -78,10 +82,10 @@ export default async function PostPage({ params }: Props) {
         </div>
       </article>
 
-      <section className="border-t border-line">
+      <section className="edge-top">
         <div className="container-x py-20">
-          <h2 className="display-3">Keep reading</h2>
-          <ul className="mt-10 grid gap-6 md:grid-cols-2">
+          <h2 className="display-3 text-balance">Keep reading</h2>
+          <ul className="block-gap grid gap-4 md:grid-cols-2">
             {more.map((p) => (
               <li key={p.slug}>
                 <Link href={`/blog/${p.slug}`} className="group block rounded-card bg-surface p-7 shadow-[inset_0_0_0_1px_var(--line)] transition-colors duration-500 ease-smooth hover:bg-surface-2">

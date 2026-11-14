@@ -11,8 +11,8 @@ export function Magnetic({ children, strength = 0.25, className }: { children: R
   const reduce = useReducedMotion();
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const sx = useSpring(x, { stiffness: 220, damping: 18, mass: 0.4 });
-  const sy = useSpring(y, { stiffness: 220, damping: 18, mass: 0.4 });
+  const sx = useSpring(x, { stiffness: 150, damping: 20, mass: 0.5 });
+  const sy = useSpring(y, { stiffness: 150, damping: 20, mass: 0.5 });
 
   if (reduce) return <div className={className}>{children}</div>;
 

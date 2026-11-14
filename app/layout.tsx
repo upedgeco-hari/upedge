@@ -12,7 +12,7 @@ import { organizationJsonLd } from "@/lib/seo";
 // Brand typeface (logo guideline: Poppins).
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "600"],
   display: "swap",
   variable: "--font-poppins",
 });
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f3f3f1",
+  themeColor: "#f4f2ee",
   width: "device-width",
   initialScale: 1,
 };

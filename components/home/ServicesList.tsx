@@ -26,7 +26,7 @@ export function ServicesList({ services }: { services: Service[] }) {
               href={`/services/${s.slug}`}
               onPointerEnter={() => setActive(i)}
               onFocus={() => setActive(i)}
-              className="group block py-7 sm:py-8"
+              className="group relative block py-7 transition-colors duration-[var(--dur-3)] ease-smooth hover:bg-accent-wash sm:py-8"
             >
               <span className="flex items-center justify-between gap-6">
                 <span
@@ -40,14 +40,14 @@ export function ServicesList({ services }: { services: Service[] }) {
                 <span
                   className={cn(
                     "grid size-11 shrink-0 place-items-center rounded-full transition-colors duration-500 ease-smooth",
-                    i === active ? "bg-accent" : "bg-ink/5",
+                    i === active ? "bg-accent shadow-accent" : "bg-ink/5",
                   )}
                   aria-hidden="true"
                 >
                   <ArrowUpRight size={20} weight="light" />
                 </span>
               </span>
-              <span className="mt-3 block max-w-[52ch] text-muted lg:hidden">{s.short}</span>
+              <span className="measure mt-3 block text-muted lg:hidden">{s.short}</span>
             </Link>
           </li>
         ))}
@@ -71,7 +71,7 @@ export function ServicesList({ services }: { services: Service[] }) {
               </AnimatePresence>
             </div>
           </div>
-          <p className="mt-6 max-w-[40ch] text-ink-2">{current.short}</p>
+          <p className="measure-sm mt-6 text-ink-2">{current.short}</p>
         </div>
       </div>
     </div>

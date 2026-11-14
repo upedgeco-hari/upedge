@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
 import { useRef, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
@@ -23,7 +23,8 @@ export function Parallax({ children, distance = 80, scale = 1.12, disabled, clas
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [-distance / 2, distance / 2]);
+  const raw = useTransform(scrollYProgress, [0, 1], [-distance / 2, distance / 2]);
+  const y = useSpring(raw, { stiffness: 140, damping: 36, mass: 0.35 });
 
   return (
     <div ref={ref} className={cn("absolute inset-0", className)}>
