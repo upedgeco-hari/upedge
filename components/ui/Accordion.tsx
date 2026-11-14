@@ -23,13 +23,13 @@ export function Accordion({ items }: { items: Item[] }) {
                 aria-expanded={isOpen}
                 aria-controls={`${id}-p-${i}`}
                 onClick={() => setOpen(isOpen ? null : i)}
-                className="flex w-full items-center justify-between gap-6 py-6 text-left text-lg font-medium tracking-tight sm:text-xl"
+                className="group flex w-full items-center justify-between gap-6 py-6 text-left text-lg font-medium tracking-tight transition-colors duration-[var(--dur-2)] hover:text-accent-deep sm:text-xl"
               >
                 {item.q}
                 <span
                   className={cn(
-                    "grid size-9 shrink-0 place-items-center rounded-full bg-ink/5 transition-transform duration-500 ease-smooth",
-                    isOpen && "rotate-45 bg-accent",
+                    "grid size-10 shrink-0 place-items-center rounded-full bg-ink/5 text-ink transition-[transform,background-color,box-shadow] duration-[var(--dur-3)] ease-spring group-hover:bg-ink/10",
+                    isOpen && "rotate-45 bg-accent shadow-accent group-hover:bg-accent",
                   )}
                   aria-hidden="true"
                 >
@@ -42,8 +42,8 @@ export function Accordion({ items }: { items: Item[] }) {
               role="region"
               aria-labelledby={`${id}-t-${i}`}
               className={cn(
-                "grid transition-[grid-template-rows] duration-500 ease-smooth",
-                isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+                "grid transition-[grid-template-rows,opacity] duration-[var(--dur-4)] ease-smooth",
+                isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
               )}
             >
               <div className="overflow-hidden">

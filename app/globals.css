@@ -1,11 +1,12 @@
 @import "tailwindcss";
 @import "../styles/tokens.css";
 
-/* Map tokens to Tailwind utilities (bg-paper, text-ink, border-line, ...) */
+/* Map tokens to Tailwind utilities (bg-paper, text-ink, border-line, shadow-elev-3, ...) */
 @theme inline {
   --color-paper: var(--paper);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
   --color-ink: var(--ink);
   --color-ink-2: var(--ink-2);
   --color-muted: var(--muted);
@@ -16,22 +17,38 @@
   --color-accent-hover: var(--accent-hover);
   --color-accent-deep: var(--accent-deep);
   --color-accent-tint: var(--accent-tint);
+  --color-accent-wash: var(--accent-wash);
   --color-inverse: var(--inverse);
   --color-inverse-2: var(--inverse-2);
+  --color-inverse-3: var(--inverse-3);
   --color-on-inverse: var(--on-inverse);
   --color-on-inverse-muted: var(--on-inverse-muted);
   --color-line-inverse: var(--line-inverse);
+  --color-line-inverse-strong: var(--line-inverse-strong);
   --color-danger: var(--danger);
   --color-success: var(--success);
 
   --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
 
-  --radius-card: var(--radius-card);
-  --radius-inner: var(--radius-inner);
+  --radius-chip: var(--radius-chip);
   --radius-input: var(--radius-input);
+  --radius-inner: var(--radius-inner);
+  --radius-card: var(--radius-card);
+  --radius-xl: var(--radius-xl);
+
+  /* Tinted, two-layer elevation: shadow-elev-1 ... shadow-elev-5 */
+  --shadow-elev-1: var(--elev-1);
+  --shadow-elev-2: var(--elev-2);
+  --shadow-elev-3: var(--elev-3);
+  --shadow-elev-4: var(--elev-4);
+  --shadow-elev-5: var(--elev-5);
+  --shadow-accent: var(--elev-accent);
+  --shadow-accent-lift: var(--elev-accent-lift);
 
   --ease-out-expo: var(--ease-out-expo);
   --ease-smooth: var(--ease-smooth);
+  --ease-spring: var(--ease-spring);
+  --ease-in-out: var(--ease-in-out);
 }
 
 @layer base {
@@ -40,6 +57,30 @@
     color: var(--ink);
     -webkit-text-size-adjust: 100%;
     scroll-padding-top: calc(var(--header-h) + 2rem);
+    /*
+     * Touch: kill the grey flash iOS and Android paint over a tapped link. Every
+     * interactive element here already has its own press state (active:scale on the
+     * buttons, the hover and focus rings elsewhere), so the platform flash is noise.
+     */
+    -webkit-tap-highlight-color: transparent;
+    /*
+     * Windows and Linux use classic scrollbars that take ~15px of layout width, so moving
+     * from a page that scrolls to one that does not shifts the whole site sideways.
+     * Reserving the gutter stops that. No effect on macOS, which uses overlay scrollbars.
+     */
+    scrollbar-gutter: stable;
+    /*
+     * Guard against a decorative overhang (an offset image, a light pool) putting a
+     * horizontal scrollbar on the page. `clip`, never `hidden`: `hidden` would make
+     * <html> a scroll container and silently break every position: sticky on the site.
+     */
+    overflow-x: clip;
+  }
+  /* Native fallback for anchor jumps before Lenis is live, and when it is skipped. */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
   body {
     min-height: 100dvh;
@@ -47,10 +88,44 @@
     color: var(--ink);
     font-family: var(--font-sans);
     font-weight: 400;
-    line-height: 1.6;
+    line-height: 1.62;
+    font-kerning: normal;
+    font-optical-sizing: auto;
+    font-variant-ligatures: common-ligatures;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
   }
+
+  /*
+   * Film grain over the whole page: it breaks the flatness of the large flat fills (hero,
+   * accent CTA, footer) the way print stock does. Deliberately no blend mode: compositing
+   * a blended full-screen layer on every scroll frame costs more than the texture is worth.
+   */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-grain);
+    pointer-events: none;
+    opacity: var(--grain);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+
+  /* Optical typography defaults: no orphans in headings, no ragged widows in copy. */
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p,
+  li,
+  blockquote,
+  figcaption {
+    text-wrap: pretty;
+  }
+
   ::selection {
     background: var(--accent);
     color: var(--accent-ink);
@@ -58,7 +133,7 @@
   :focus-visible {
     outline: 2px solid var(--ink);
     outline-offset: 3px;
-    border-radius: 4px;
+    border-radius: 6px;
   }
   .on-inverse :focus-visible,
   [data-inverse] :focus-visible {
@@ -84,142 +159,234 @@ html.lenis body {
   overflow: hidden;
 }
 
-/* Type scale */
+/* ---------------------------------------------------------------- Type scale */
+/* The larger the type, the tighter it sets. */
 @utility display-1 {
   font-size: clamp(2.375rem, 1.4rem + 5.2vw, 5.5rem);
-  line-height: 1;
-  letter-spacing: -0.04em;
+  line-height: 0.98;
+  letter-spacing: -0.045em;
   font-weight: 500;
 }
 @utility display-2 {
   font-size: clamp(2rem, 1.2rem + 3.4vw, 4rem);
-  line-height: 1.04;
-  letter-spacing: -0.035em;
+  line-height: 1.03;
+  letter-spacing: -0.038em;
   font-weight: 500;
 }
 @utility display-3 {
   font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.5rem);
-  line-height: 1.12;
-  letter-spacing: -0.025em;
+  line-height: 1.1;
+  letter-spacing: -0.028em;
   font-weight: 500;
 }
 @utility lead {
   font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.3125rem);
-  line-height: 1.55;
+  line-height: 1.58;
+  letter-spacing: -0.011em;
   color: var(--ink-2);
   max-width: 62ch;
 }
 @utility eyebrow {
   font-size: 0.75rem;
   line-height: 1;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   font-weight: 500;
 }
 @utility tabular {
   font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
 }
 
-/* Layout helpers */
+/* Index numbers (01, 02) that sit beside a heading */
+@utility index-num {
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------- Layout helpers */
 @utility container-x {
   width: 100%;
   max-width: var(--container);
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
+
+/*
+ * THE COLUMN RULE
+ *
+ * Every two-column section runs on `lg:grid-cols-12 gap-12 lg:gap-8` and leaves exactly
+ * one empty column between its halves, so the inner edges of every section on the site
+ * land on the same two gridlines:
+ *
+ *   A   7 / 4 at 9    content + narrow aside        (about story, project story, contact)
+ *   B   4 / 7 at 6    small label + wide content    (certifications, included, FAQ)
+ *   C   6 / 5 at 8    media + display heading       (about preview, lead blog post)
+ *       5 / 6 at 7    the same split, reversed      (process timeline)
+ *   D   8 / 3 at 10   long text + controls          (testimonials)
+ *
+ * Use B only when the left column is display-3 or smaller: a display-2 in four columns
+ * is 54px type in a 300px measure. Card grids are exempt (7 + 5, 6 + 6): adjacent cards
+ * are separated by the grid gap, not by an empty column.
+ */
+/*
+ * Vertical rhythm. Four values and no others, so every section on the site stacks to the
+ * same grid. Optically asymmetric by design: a section needs slightly more room under it
+ * than above it to look evenly spaced.
+ */
+@utility section-pt {
+  padding-top: clamp(5rem, 3rem + 8vw, 10rem);
+}
+@utility section-pb {
+  padding-bottom: clamp(5.5rem, 3.25rem + 9vw, 11.5rem);
+}
 @utility section-y {
-  padding-block: clamp(5rem, 3rem + 8vw, 10rem);
+  padding-top: clamp(5rem, 3rem + 8vw, 10rem);
+  padding-bottom: clamp(5.5rem, 3.25rem + 9vw, 11.5rem);
+}
+/* Section header to its content. */
+@utility block-gap {
+  margin-top: clamp(2.75rem, 2rem + 2.2vw, 4rem);
+}
+/* Content to the link or button that closes it. */
+@utility cta-gap {
+  margin-top: clamp(2rem, 1.5rem + 1.6vw, 3rem);
 }
 
-/* Page-to-page fade (see app/template.tsx) */
-/* Start at 0.01, not 0: Chrome ignores opacity:0 elements when picking the LCP candidate. */
-@keyframes page-in {
-  from {
-    opacity: 0.01;
-  }
+/*
+ * Measures. Three widths for running text, plus `lead` at 62ch. Nine different ch values
+ * across the site meant no two paragraphs wrapped on the same rhythm.
+ */
+@utility measure {
+  max-width: 52ch;
 }
-.page-in {
-  animation: page-in 0.4s var(--ease-smooth) both;
+@utility measure-sm {
+  max-width: 40ch;
 }
-
-/* Scroll reveal (see components/ui/Reveal.tsx). Shown immediately without JS or with reduced motion. */
-.reveal {
-  opacity: 0;
-  transform: translateY(var(--y, 28px));
-  filter: blur(6px);
-  transition:
-    opacity 0.9s var(--ease-out-expo) var(--d, 0s),
-    transform 0.9s var(--ease-out-expo) var(--d, 0s),
-    filter 0.9s var(--ease-out-expo) var(--d, 0s);
-}
-.reveal[data-in] {
-  opacity: 1;
-  transform: none;
-  filter: none;
-}
-@media (scripting: none), (prefers-reduced-motion: reduce) {
-  .reveal {
-    opacity: 1;
-    transform: none;
-    filter: none;
-  }
+@utility measure-quote {
+  max-width: 36ch;
 }
 
-/* Above-the-fold entrance (CSS only, see components/ui/Rise.tsx) */
-@keyframes rise {
-  from {
-    opacity: 0.01;
-    transform: translateY(28px);
+/*
+ * Section divider: a hairline that fades out towards both gutters, instead of a hard
+ * full-bleed border crashing into the edge of the screen.
+ */
+@utility edge-top {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--line-strong) 12%,
+      var(--line-strong) 88%,
+      transparent
+    );
+    pointer-events: none;
   }
-}
-.rise {
-  animation: rise 0.9s var(--ease-out-expo) var(--d, 0s) both;
 }
 
-/* Service-area marquee (see components/home/ServiceAreas.tsx): two bands of duplicated
-   text scroll in opposite directions; words are stroke-outlined and fill solid on hover.
-   Reduced motion is handled by the global rule above (animation collapses to its un-animated
-   base position, since no fill-mode is set). */
-@keyframes marquee-left {
-  to {
-    transform: translateX(-50%);
+/* Same rule, hung off the bottom edge of a block. */
+@utility edge-bottom {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      var(--line-strong) 12%,
+      var(--line-strong) 88%,
+      transparent
+    );
+    pointer-events: none;
   }
-}
-@keyframes marquee-right {
-  from {
-    transform: translateX(-50%);
-  }
-}
-.marquee-row {
-  overflow: hidden;
-}
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee-left var(--marquee-duration, 40s) linear infinite;
-}
-.marquee-track[data-dir="right"] {
-  animation-name: marquee-right;
-}
-.place-word {
-  color: transparent;
-  -webkit-text-stroke: 1.25px var(--line-strong);
-  transition:
-    color 0.4s var(--ease-smooth),
-    -webkit-text-stroke-color 0.4s var(--ease-smooth);
-}
-.place-word:hover,
-.place-word[data-active="true"] {
-  color: var(--ink);
-  -webkit-text-stroke-color: var(--ink);
 }
 
+/* ---------------------------------------------------------------- Surfaces */
 /* Hairline image frame (outer shell of the double-bezel) */
 @utility bezel {
-  padding: 0.375rem;
+  padding: var(--bezel-p);
   border-radius: var(--radius-card);
-  background: color-mix(in srgb, var(--ink) 5%, transparent);
-  box-shadow: 0 0 0 1px var(--line);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--ink) 7%, transparent),
+    color-mix(in srgb, var(--ink) 3%, transparent)
+  );
+  box-shadow:
+    inset 0 0 0 1px var(--line),
+    var(--elev-2);
+  transition:
+    box-shadow var(--dur-4) var(--ease-smooth),
+    transform var(--dur-4) var(--ease-smooth);
+}
+
+/* Raise a surface on hover. Transform only, so it composites on the GPU. */
+@utility lift {
+  transition:
+    box-shadow var(--dur-4) var(--ease-smooth),
+    transform var(--dur-4) var(--ease-smooth);
+  &:hover {
+    transform: translate3d(0, -4px, 0);
+    box-shadow: var(--elev-4);
+  }
+}
+
+/* Panel: one hairline and one soft shadow, not border-plus-shadow-plus-white. */
+@utility panel {
+  background: var(--surface);
+  border-radius: var(--radius-card);
+  box-shadow:
+    inset 0 0 0 1px var(--line),
+    var(--elev-2);
+}
+
+/* Refracting glass: blur plus a bright inner top edge, so the panel has a real edge. */
+@utility glass {
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 55%, transparent),
+    inset 0 0 0 1px var(--line),
+    var(--elev-3);
+}
+
+/*
+ * Ambient light pool. Place inside an isolated, relatively positioned parent and set the
+ * colour with a text-* utility. A radial gradient rather than a blur filter on purpose:
+ * an 80px blur over a 60vh layer is one of the few effects that will drop frames on a
+ * mid-range phone, and at this softness the two are indistinguishable.
+ */
+@utility glow {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+  background-image: radial-gradient(closest-side, currentColor, transparent 76%);
+}
+
+/* Animated underline for text links: grows from the left, no layout shift. */
+@utility link-line {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  transition: background-size var(--dur-3) var(--ease-smooth);
+  &:hover,
+  &:focus-visible {
+    background-size: 100% 1px;
+  }
 }
 
 /* Hide scrollbars on horizontal strips */
@@ -228,6 +395,188 @@ html.lenis body {
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+/* ---------------------------------------------------------------- Motion */
+/* Page-to-page fade (see app/template.tsx) */
+/* Start at 0.01, not 0: Chrome ignores opacity:0 elements when picking the LCP candidate. */
+@keyframes page-in {
+  from {
+    opacity: 0.01;
+  }
+}
+.page-in {
+  animation: page-in 0.45s var(--ease-smooth) both;
+}
+
+/*
+ * Scroll reveal (see components/ui/Reveal.tsx). Shown immediately without JS or with
+ * reduced motion. Opacity and transform only: a blur filter across dozens of elements
+ * forces a repaint every frame and was the biggest source of scroll jank here.
+ */
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, var(--y, 26px), 0) scale(var(--s, 1));
+  transition:
+    opacity var(--dur-5) var(--ease-out-expo) var(--d, 0s),
+    transform 1.1s var(--ease-out-expo) var(--d, 0s);
+  will-change: opacity, transform;
+}
+.reveal[data-in] {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+@media (scripting: none), (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+}
+
+/*
+ * Curtain reveal, for section headings only.
+ *
+ * The line slides up out of its own box rather than fading in place. Transform on an
+ * overflow-hidden parent, so it composites on the GPU: no filters, no clip-path, nothing
+ * that forces a repaint per frame. The mask class goes on the heading itself (not a
+ * wrapper div) so the em padding below resolves against the heading's own font size.
+ */
+.reveal-mask {
+  overflow: hidden;
+  /*
+   * Poppins' content box is 1.4em but display-2 sets line-height 1.03, so the glyphs
+   * already overflow their line box and a plain mask shaves the descenders off the last
+   * line. Pad the mask and pull the layout back. Bottom only: padding on top would let
+   * the line peek above the mask before it animates.
+   */
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+.reveal-mask > span {
+  display: block;
+  /* 120%, not 100%: the padding above makes the mask taller than the line it hides. */
+  transform: translate3d(0, 120%, 0);
+  transition: transform 1.15s var(--ease-out-expo) var(--d, 0s);
+  will-change: transform;
+}
+.reveal-mask[data-in] > span {
+  transform: none;
+  will-change: auto;
+}
+@media (scripting: none), (prefers-reduced-motion: reduce) {
+  .reveal-mask > span {
+    transform: none;
+    will-change: auto;
+  }
+}
+
+/*
+ * Media reveal: a photograph should settle rather than slide. Less travel than body
+ * copy, a slow scale-down out of an over-size, and a longer curve so a large image is
+ * still moving after the text around it has landed.
+ */
+.reveal-media {
+  transition-duration: 1s, 1.5s;
+}
+
+/* Above-the-fold entrance (CSS only, see components/ui/Rise.tsx) */
+@keyframes rise {
+  from {
+    opacity: 0.01;
+    transform: translate3d(0, 26px, 0);
+  }
+}
+.rise {
+  animation: rise 1s var(--ease-out-expo) var(--d, 0s) both;
+}
+
+/* Pending indicator for a button that is waiting on the network. */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spinner {
+  width: 0.9375rem;
+  height: 0.9375rem;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, currentColor 22%, transparent);
+  border-top-color: currentColor;
+  animation: spin 0.7s linear infinite;
+}
+
+/* Slow drift for the ambient light pools, so large dark blocks are never dead still. */
+@keyframes drift {
+  50% {
+    transform: translate3d(2%, -3%, 0) scale(1.08);
+  }
+}
+.drift {
+  animation: drift 18s var(--ease-in-out) infinite;
+}
+
+/* Service-area marquee (see components/home/ServiceAreas.tsx): two bands of duplicated
+   text scroll in opposite directions; words are stroke-outlined and fill solid on hover.
+   Reduced motion is handled by the global rule below (animation collapses to its un-animated
+   base position, since no fill-mode is set). */
+@keyframes marquee-left {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+@keyframes marquee-right {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+.marquee-row {
+  overflow: hidden;
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  backface-visibility: hidden;
+  animation: marquee-left var(--marquee-duration, 40s) linear infinite;
+}
+.marquee-track[data-dir="right"] {
+  animation-name: marquee-right;
+}
+/* Hold the band still while it is being read or hovered. */
+.marquee-row:hover .marquee-track,
+.marquee-row:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+.place-word {
+  color: transparent;
+  -webkit-text-stroke: 1.25px var(--line-strong);
+  transition:
+    color var(--dur-3) var(--ease-smooth),
+    -webkit-text-stroke-color var(--dur-3) var(--ease-smooth);
+}
+.place-word:hover,
+.place-word[data-active="true"] {
+  color: var(--ink);
+  -webkit-text-stroke-color: var(--ink);
+}
+
+/*
+ * The floating contact buttons live above the header layer so they stay reachable while
+ * the page scrolls. An open mobile menu is the one time they have to leave: they were
+ * painting on top of the nav, because the menu cannot escape the header's stacking
+ * context. <html data-menu-open> is set by components/layout/Header.tsx.
+ */
+.floating-contact {
+  transition:
+    opacity var(--dur-2) var(--ease-smooth),
+    transform var(--dur-2) var(--ease-smooth);
+}
+[data-menu-open] .floating-contact {
+  opacity: 0;
+  transform: translate3d(0, 0.75rem, 0);
+  pointer-events: none;
 }
 
 /* Skip link */
@@ -241,7 +590,7 @@ html.lenis body {
   background: var(--accent);
   color: var(--accent-ink);
   font-weight: 500;
-  transition: top 0.2s var(--ease-out-expo);
+  transition: top var(--dur-2) var(--ease-out-expo);
 }
 .skip-link:focus {
   top: 1rem;
