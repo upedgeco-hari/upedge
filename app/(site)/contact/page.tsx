@@ -27,7 +27,7 @@ export default function ContactPage() {
         lead="Tell us about your plot or property. We will come back with a clear next step, usually within one working day."
       />
 
-      <section className="container-x grid gap-14 pb-24 lg:grid-cols-12 lg:gap-10 lg:pb-32">
+      <section className="section-pb container-x grid gap-12 lg:grid-cols-12 lg:gap-8">
         <Reveal className="lg:col-span-7">
           <ContactForm />
         </Reveal>
@@ -37,14 +37,14 @@ export default function ContactPage() {
             <dl className="space-y-6">
               {details.map(({ icon: Icon, label, value, href }) => (
                 <div key={label} className="flex gap-4">
-                  <span className="grid size-11 shrink-0 place-items-center rounded-full bg-accent text-accent-ink" aria-hidden="true">
-                    <Icon size={20} weight="light" />
+                  <span className="grid size-10 shrink-0 place-items-center rounded-full bg-accent text-accent-ink" aria-hidden="true">
+                    <Icon size={18} weight="light" />
                   </span>
                   <div>
                     <dt className="text-sm text-muted">{label}</dt>
                     <dd className="mt-0.5">
                       {href ? (
-                        <a href={href} className="underline-offset-4 hover:underline">
+                        <a href={href} className="link-line">
                           {value}
                         </a>
                       ) : (
@@ -57,7 +57,7 @@ export default function ContactPage() {
             </dl>
           </Reveal>
 
-          <Reveal delay={0.1}>
+          <Reveal variant="media" delay={0.1}>
             <div className="bezel">
               <div className="relative aspect-[4/3] overflow-hidden rounded-inner bg-inverse-2">
                 {site.mapEmbedUrl ? (

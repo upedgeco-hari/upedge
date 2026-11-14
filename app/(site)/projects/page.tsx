@@ -19,7 +19,7 @@ export default async function ProjectsPage() {
         title="Our projects"
         lead="Each project is photographed at every stage. Open one to follow the build from the first day on site to handover."
       />
-      <section className="container-x pb-28 sm:pb-40">
+      <section className="section-pb container-x">
         <ProjectGrid projects={projects} categories={categories} />
       </section>
       <CtaBanner />

@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { Reveal } from "@/components/ui/Reveal";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 import { cn } from "@/lib/cn";
 import { serviceAreas } from "@/data/site";
 
@@ -32,21 +33,18 @@ function Track({ items, dir, duration }: { items: string[]; dir: "left" | "right
 /** Where UPEDGE has built: a two-band marquee of districts across Tamil Nadu, plus Bangalore and Kerala. */
 export function ServiceAreas() {
   return (
-    <section className="section-y overflow-hidden border-t border-line">
+    <section className="section-y edge-top overflow-hidden">
       <div className="container-x">
-        <Reveal className="max-w-3xl">
-          <h2 className="display-2 text-balance">Built across Tamil Nadu, and beyond.</h2>
-        </Reveal>
-        <Reveal delay={0.1} className="mt-6">
-          <p className="lead">
-            We have completed projects in {serviceAreas.tamilNadu.length} districts of Tamil Nadu, and in Bangalore and Kerala.
-          </p>
-        </Reveal>
+        <SectionHeader
+          eyebrow="Where we build"
+          title="Built across Tamil Nadu, and beyond."
+          lead={`We have completed projects in ${serviceAreas.tamilNadu.length} districts of Tamil Nadu, and in Bangalore and Kerala.`}
+        />
       </div>
 
       <Reveal
         delay={0.15}
-        className="mt-10 space-y-1 mask-[linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] sm:mt-16 sm:space-y-4"
+        className="block-gap space-y-1 mask-[linear-gradient(to_right,transparent,black_6%,black_94%,transparent)] sm:space-y-4"
       >
         <div className="marquee-row" aria-hidden="true">
           <Track items={places} dir="left" duration="50s" />

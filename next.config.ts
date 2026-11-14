@@ -2,8 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    // 75 is Next's default; 100 is used for the hero portrait so it isn't visibly recompressed.
-    qualities: [75, 100],
+    // 75 is Next's default. 85 is used on the hero portrait: that source is already a
+    // compressed photo, so re-encoding it at 75 on top would compound two lossy passes.
+    qualities: [75, 85],
   },
 };
 

@@ -7,14 +7,17 @@ import { CloudImage } from "@/components/media/CloudImage";
 import { BeforeAfter } from "@/components/projects/BeforeAfter";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { ProjectStory } from "@/components/projects/ProjectStory";
+import { BackLink } from "@/components/ui/BackLink";
 import { Button } from "@/components/ui/Button";
 import { Parallax } from "@/components/ui/Parallax";
 import { Reveal } from "@/components/ui/Reveal";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Rise } from "@/components/ui/Rise";
 import { projects as staticProjects } from "@/data/projects";
 import { getService } from "@/data/services";
 import { cta, site } from "@/data/site";
 import { cloudinaryReady, imageUrl, isLive, ogImageUrl } from "@/lib/cloudinary";
+import { projectEnquiry, quoteHref } from "@/lib/enquiry";
 import { getProjectBySlug, getRelated } from "@/lib/projects";
 import { absoluteUrl, breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 
@@ -82,6 +85,9 @@ export default async function ProjectPage({ params }: Props) {
 
       {/* Facts */}
       <section className="container-x pt-14 sm:pt-20" aria-label="Project facts">
+        <div className="mb-10">
+          <BackLink href="/projects">All projects</BackLink>
+        </div>
         <dl className="grid grid-cols-2 gap-x-8 gap-y-8 border-b border-line pb-12 md:grid-cols-3 lg:grid-cols-6">
           {facts.map(([k, v]) => (
             <div key={k}>
@@ -93,10 +99,10 @@ export default async function ProjectPage({ params }: Props) {
       </section>
 
       {/* Story text */}
-      <section className="section-y container-x grid gap-14 lg:grid-cols-12">
+      <section className="section-y container-x grid gap-12 lg:grid-cols-12 lg:gap-8">
         <div className="space-y-6 lg:col-span-7">
           <Reveal>
-            <h2 className="display-3">The brief and the build</h2>
+            <h2 className="display-3 text-balance">The brief and the build</h2>
           </Reveal>
           {project.story.map((para, i) => (
             <Reveal key={i} delay={0.06 * (i + 1)}>
@@ -127,23 +133,22 @@ export default async function ProjectPage({ params }: Props) {
       {/* Before / after */}
       {project.beforeAfter && (
         <section className="section-y container-x">
-          <Reveal className="max-w-2xl">
-            <h2 className="display-2 text-balance">The transformation</h2>
-            <p className="lead mt-5">Drag the handle to compare the site before work began with the finished result.</p>
-          </Reveal>
-          <Reveal delay={0.1} className="mt-12">
+          <SectionHeader
+            eyebrow="Before and after"
+            title="The transformation"
+            lead="Drag the handle to compare the site before work began with the finished result."
+          />
+          <Reveal variant="media" delay={0.1} className="block-gap">
             <BeforeAfter before={project.beforeAfter.before} after={project.beforeAfter.after} />
           </Reveal>
         </section>
       )}
 
       {/* Related + CTA */}
-      <section className="section-y border-t border-line">
+      <section className="section-y edge-top">
         <div className="container-x">
-          <Reveal className="max-w-2xl">
-            <h2 className="display-2 text-balance">More projects</h2>
-          </Reveal>
-          <ul className="mt-14 grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
+          <SectionHeader eyebrow="Keep looking" title="More projects" />
+          <ul className="block-gap grid gap-x-8 gap-y-16 md:grid-cols-2 lg:grid-cols-3">
             {related.map((p) => (
               <Reveal as="li" key={p.slug}>
                 <ProjectCard project={p} aspect="aspect-[4/5]" sizes="(min-width: 1024px) 30vw, (min-width: 768px) 46vw, 100vw" />
@@ -157,11 +162,11 @@ export default async function ProjectPage({ params }: Props) {
         <div className="container-x py-24 sm:py-32">
           <Reveal className="max-w-4xl">
             <h2 className="display-1 text-balance">Start a similar project.</h2>
-            <p className="mt-6 max-w-[46ch] text-lg text-accent-ink/85">
+            <p className="measure-sm mt-6 text-lg text-accent-ink/85">
               Tell us about your plot or property and we will outline how a project like {project.title} could work for you.
             </p>
-            <div className="mt-10">
-              <Button href="/contact" variant="dark">
+            <div className="cta-gap">
+              <Button href={quoteHref(projectEnquiry(project))} variant="dark">
                 {cta.quote}
               </Button>
             </div>

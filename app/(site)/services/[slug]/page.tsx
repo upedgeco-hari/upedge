@@ -10,9 +10,11 @@ import { Accordion } from "@/components/ui/Accordion";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/ui/PageHero";
 import { Reveal } from "@/components/ui/Reveal";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Rise } from "@/components/ui/Rise";
 import { getService, services } from "@/data/services";
 import { cta, site } from "@/data/site";
+import { quoteHref, serviceEnquiry } from "@/lib/enquiry";
 import { getAllProjects } from "@/lib/projects";
 import { absoluteUrl, breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 
@@ -34,14 +36,15 @@ export default async function ServicePage({ params }: Props) {
   const service = getService(slug);
   if (!service) notFound();
 
+  const enquiry = serviceEnquiry(service.slug);
   const all = await getAllProjects();
   const related = all.filter((p) => p.category === service.relatedCategory || p.services?.includes(service.slug)).slice(0, 2);
 
   return (
     <>
-      <PageHero title={service.title} lead={service.intro} />
+      <PageHero title={service.title} lead={service.intro} back={{ href: "/services", label: "All services" }} />
 
-      <section className="container-x pb-20 sm:pb-28">
+      <section className="section-pb container-x">
         <Rise>
           <div className="bezel">
             <div className="relative aspect-[16/9] overflow-hidden rounded-inner sm:aspect-[21/9]">
@@ -52,12 +55,12 @@ export default async function ServicePage({ params }: Props) {
       </section>
 
       {/* What is included */}
-      <section className="container-x grid gap-12 pb-24 sm:pb-32 lg:grid-cols-12">
+      <section className="section-pb container-x grid gap-12 lg:grid-cols-12 lg:gap-8">
         <Reveal className="lg:col-span-4">
           <ServiceIcon name={service.icon} className="text-accent-deep" />
-          <h2 className="display-3 mt-6">What is included</h2>
+          <h2 className="display-3 mt-6 text-balance">What is included</h2>
         </Reveal>
-        <ul className="grid gap-x-10 gap-y-5 sm:grid-cols-2 lg:col-span-8">
+        <ul className="grid gap-x-10 gap-y-5 sm:grid-cols-2 lg:col-span-7 lg:col-start-6">
           {service.included.map((item, i) => (
             <Reveal as="li" key={item} delay={(i % 2) * 0.06} className="flex gap-4">
               <span className="mt-1 grid size-6 shrink-0 place-items-center rounded-full bg-accent text-accent-ink" aria-hidden="true">
@@ -70,12 +73,10 @@ export default async function ServicePage({ params }: Props) {
       </section>
 
       {/* Process */}
-      <section className="section-y border-t border-line">
+      <section className="section-y edge-top">
         <div className="container-x">
-          <Reveal>
-            <h2 className="display-2 text-balance">How it works</h2>
-          </Reveal>
-          <ol className="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+          <SectionHeader eyebrow="Process" title="How it works" />
+          <ol className="block-gap grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
             {service.process.map((p, i) => (
               <Reveal as="li" key={p.title} delay={i * 0.08} className="border-t border-line-strong pt-6">
                 <h3 className="display-3 text-[1.375rem]!">{p.title}</h3>
@@ -88,12 +89,10 @@ export default async function ServicePage({ params }: Props) {
 
       {/* Related projects */}
       {related.length > 0 && (
-        <section className="section-y border-t border-line">
+        <section className="section-y edge-top">
           <div className="container-x">
-            <Reveal>
-              <h2 className="display-2 text-balance">Related projects</h2>
-            </Reveal>
-            <ul className="mt-14 grid gap-x-8 gap-y-14 md:grid-cols-2">
+            <SectionHeader eyebrow="Selected work" title="Related projects" />
+            <ul className="block-gap grid gap-x-8 gap-y-16 md:grid-cols-2">
               {related.map((p) => (
                 <Reveal as="li" key={p.slug}>
                   <ProjectCard project={p} aspect="aspect-[4/3]" sizes="(min-width: 768px) 46vw, 100vw" />
@@ -105,21 +104,21 @@ export default async function ServicePage({ params }: Props) {
       )}
 
       {/* FAQ */}
-      <section className="section-y border-t border-line">
-        <div className="container-x grid gap-12 lg:grid-cols-12">
-          <Reveal className="lg:col-span-4">
-            <h2 className="display-3">Questions we hear often</h2>
-            <div className="mt-8">
-              <Button href="/contact">{cta.quote}</Button>
-            </div>
-          </Reveal>
+      <section className="section-y edge-top">
+        <div className="container-x grid gap-12 lg:grid-cols-12 lg:gap-8">
+          <div className="lg:col-span-4">
+            <SectionHeader size="sm" title="Questions we hear often" />
+            <Reveal delay={0.1} className="cta-gap">
+              <Button href={quoteHref(enquiry)}>{cta.quote}</Button>
+            </Reveal>
+          </div>
           <div className="lg:col-span-7 lg:col-start-6">
             <Accordion items={service.faqs} />
           </div>
         </div>
       </section>
 
-      <CtaBanner />
+      <CtaBanner href={quoteHref(enquiry)} />
 
       <JsonLd
         data={[

@@ -3,6 +3,7 @@
 import { ArrowLeft, ArrowRight, MagnifyingGlassMinus, MagnifyingGlassPlus, X } from "@phosphor-icons/react/dist/ssr";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import { setScrollLocked } from "@/lib/scroll-lock";
 import { CloudImage } from "@/components/media/CloudImage";
 import { cn } from "@/lib/cn";
 import type { ProjectImage } from "@/lib/types";
@@ -16,7 +17,19 @@ type Props = {
 };
 
 const ctl =
-  "grid size-11 place-items-center rounded-full bg-on-inverse/10 text-on-inverse transition-colors duration-300 hover:bg-on-inverse hover:text-inverse disabled:opacity-30 disabled:hover:bg-on-inverse/10 disabled:hover:text-on-inverse";
+  "grid size-12 place-items-center rounded-full bg-on-inverse/10 text-on-inverse transition-colors duration-300 hover:bg-on-inverse hover:text-inverse disabled:opacity-30 disabled:hover:bg-on-inverse/10 disabled:hover:text-on-inverse";
+
+/** Viewport size, so the zoom and its drag bounds can be derived from the screen. */
+function useViewport() {
+  const [size, setSize] = useState({ w: 0, h: 0 });
+  useEffect(() => {
+    const read = () => setSize({ w: window.innerWidth, h: window.innerHeight });
+    read();
+    window.addEventListener("resize", read);
+    return () => window.removeEventListener("resize", read);
+  }, []);
+  return size;
+}
 
 /** Fullscreen viewer with zoom, arrow-key navigation, Esc to close and a focus trap. */
 export function Lightbox({ images, index, onClose, onIndex }: Props) {
@@ -26,11 +39,20 @@ export function Lightbox({ images, index, onClose, onIndex }: Props) {
   const reduce = useReducedMotion();
   const i = index ?? 0;
   const zoomed = zoom.for === index; // zoom resets whenever the image changes
+  const viewport = useViewport();
+
+  // Zoom less on a phone (the image is already filling the screen) and allow exactly as
+  // much drag as the image actually overhangs at that scale, so it can never be dragged
+  // out of frame.
+  const scale = viewport.w && viewport.w < 640 ? 1.8 : 2.2;
+  const dragX = Math.round((viewport.w * (scale - 1)) / 2);
+  const dragY = Math.round((viewport.h * (scale - 1)) / 2);
 
   useEffect(() => {
     if (!open) return;
     const previous = document.activeElement as HTMLElement | null;
     document.documentElement.style.overflow = "hidden";
+    setScrollLocked(true);
     dialogRef.current?.querySelector<HTMLElement>("[data-close]")?.focus();
 
     const onKey = (e: KeyboardEvent) => {
@@ -55,6 +77,7 @@ export function Lightbox({ images, index, onClose, onIndex }: Props) {
     return () => {
       document.removeEventListener("keydown", onKey);
       document.documentElement.style.overflow = "";
+      setScrollLocked(false);
       previous?.focus();
     };
   }, [open, i, images.length, onClose, onIndex]);
@@ -71,7 +94,7 @@ export function Lightbox({ images, index, onClose, onIndex }: Props) {
           aria-label={`Image ${i + 1} of ${images.length}: ${img.stage}`}
           data-lenis-prevent
           data-inverse
-          className="fixed inset-0 z-[var(--z-modal)] flex flex-col bg-inverse text-on-inverse"
+          className="fixed inset-x-0 top-0 z-[var(--z-modal)] flex h-[100dvh] flex-col overscroll-contain bg-inverse text-on-inverse"
           initial={reduce ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -110,10 +133,10 @@ export function Lightbox({ images, index, onClose, onIndex }: Props) {
             >
               <motion.div
                 className="relative mx-auto h-full w-full max-w-[1800px]"
-                animate={{ scale: zoomed ? 2.2 : 1 }}
+                animate={{ scale: zoomed ? scale : 1 }}
                 transition={{ type: "spring", stiffness: 160, damping: 24 }}
                 drag={zoomed}
-                dragConstraints={{ left: -400, right: 400, top: -300, bottom: 300 }}
+                dragConstraints={{ left: -dragX, right: dragX, top: -dragY, bottom: dragY }}
                 dragElastic={0.1}
               >
                 <div className="absolute inset-0 [&_img]:object-contain!">

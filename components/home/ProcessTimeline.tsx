@@ -3,6 +3,7 @@
 import { motion, useReducedMotion, useScroll, useSpring } from "motion/react";
 import { useRef } from "react";
 import { Reveal } from "@/components/ui/Reveal";
+import { SectionHeader } from "@/components/ui/SectionHeader";
 import { processSteps } from "@/data/site";
 
 /**
@@ -16,16 +17,15 @@ export function ProcessTimeline() {
   const fill = useSpring(scrollYProgress, { stiffness: 120, damping: 28, mass: 0.4 });
 
   return (
-    <section className="section-y border-t border-line">
-      <div className="container-x grid gap-14 lg:grid-cols-12">
+    <section className="section-y edge-top">
+      <div className="container-x grid gap-12 lg:grid-cols-12 lg:gap-8">
         <div className="lg:col-span-5">
           <div className="lg:sticky lg:top-32">
-            <Reveal>
-              <h2 className="display-2 text-balance">From first call to final handover.</h2>
-            </Reveal>
-            <Reveal delay={0.1} className="mt-6">
-              <p className="lead">Six clear stages, each with a defined outcome, so you always know where your project stands.</p>
-            </Reveal>
+            <SectionHeader
+              eyebrow="Process"
+              title="From first call to final handover."
+              lead="Six clear stages, each with a defined outcome, so you always know where your project stands."
+            />
           </div>
         </div>
 
@@ -42,7 +42,7 @@ export function ProcessTimeline() {
                 <span className="size-2 rounded-full bg-accent" />
               </span>
               <h3 className="display-3">{s.title}</h3>
-              <p className="mt-3 max-w-[52ch] text-ink-2">{s.text}</p>
+              <p className="measure mt-3 text-ink-2">{s.text}</p>
             </Reveal>
           ))}
         </ol>
