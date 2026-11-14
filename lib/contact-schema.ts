@@ -32,6 +32,8 @@ export const contactSchema = z.object({
   budget: z.enum(budgetRanges, { error: "Please choose a budget range." }),
   location: z.string().trim().min(2, "Please tell us where the project is."),
   message: z.string().trim().min(10, "Please add a few details (at least 10 characters).").max(3000, "Please keep your message under 3000 characters."),
+  /** The page the request started from (see lib/enquiry.ts). Carried, never typed. */
+  reference: z.string().trim().max(120).optional(),
   /** Honeypot: real people never see or fill this. */
   company: z.string().max(0).optional(),
 });

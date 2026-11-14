@@ -1,32 +1,67 @@
+"use client";
+
 import { ChatCircleText, Phone, WhatsappLogo } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { CSSProperties } from "react";
 import { digits, hasNumber, site } from "@/data/site";
+import { pageEnquiry, quoteHref, whatsappText } from "@/lib/enquiry";
 
 const btn =
-  "grid size-12 place-items-center rounded-full shadow-[0_10px_30px_-10px_rgb(13_13_13/0.45)] transition-transform duration-500 ease-smooth hover:scale-105 active:scale-95";
+  "grid size-12 place-items-center rounded-full shadow-elev-4 transition-transform duration-[var(--dur-3)] ease-spring hover:-translate-y-0.5 hover:scale-105 active:scale-95";
 
-/** Floating WhatsApp and call buttons. Fall back to the contact page until real numbers are set. */
+/** Label that slides out of the button on hover. Never appears on touch, which has no hover. */
+function Label({ children }: { children: string }) {
+  return (
+    <span
+      className="pointer-events-none absolute right-full mr-3 hidden whitespace-nowrap rounded-full bg-inverse px-3 py-1.5 text-xs text-on-inverse opacity-0 shadow-elev-3 transition-[opacity,transform] duration-[var(--dur-2)] ease-smooth group-hover:translate-x-0 group-hover:opacity-100 lg:block lg:translate-x-1"
+      aria-hidden="true"
+    >
+      {children}
+    </span>
+  );
+}
+
+/**
+ * Floating WhatsApp and call buttons.
+ *
+ * The WhatsApp message is written before the chat opens, naming the service or project
+ * the visitor is reading, so the conversation starts with a subject instead of "hi".
+ * Falls back to the contact page until real numbers are set.
+ */
 export function FloatingContact() {
-  const wa = hasNumber(site.whatsapp) ? `https://wa.me/${digits(site.whatsapp)}` : null;
+  const pathname = usePathname();
+  const context = pageEnquiry(pathname);
   const tel = hasNumber(site.phone) ? `tel:+${digits(site.phone)}` : null;
+  const wa = hasNumber(site.whatsapp)
+    ? `https://wa.me/${digits(site.whatsapp)}?text=${encodeURIComponent(whatsappText(context))}`
+    : null;
 
   return (
     <div
-      className="rise fixed bottom-5 right-4 z-[var(--z-floating)] flex flex-col gap-3 sm:right-6"
+      className="floating-contact rise fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-4 z-[var(--z-floating)] flex flex-col gap-3 sm:right-6"
       style={{ "--d": "1.2s" } as CSSProperties}
     >
       {tel ? (
-        <a href={tel} aria-label="Call UPEDGE" className={`${btn} bg-ink text-paper`}>
+        <a href={tel} aria-label="Call UPEDGE" className={`group relative ${btn} bg-ink text-paper`}>
+          <Label>Call the office</Label>
           <Phone size={22} weight="light" />
         </a>
       ) : null}
       {wa ? (
-        <a href={wa} target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp" className={`${btn} bg-accent text-accent-ink`}>
+        <a
+          href={wa}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Chat on WhatsApp"
+          className={`group relative ${btn} bg-accent text-accent-ink`}
+        >
+          <Label>{context ? `Ask about ${context.about}` : "Chat on WhatsApp"}</Label>
           <WhatsappLogo size={24} weight="light" />
         </a>
       ) : (
-        <Link href="/contact" aria-label="Contact UPEDGE" className={`${btn} bg-accent text-accent-ink`}>
+        <Link href={quoteHref(context)} aria-label="Contact UPEDGE" className={`group relative ${btn} bg-accent text-accent-ink`}>
+          <Label>{context ? `Enquire about ${context.about}` : "Get a quote"}</Label>
           <ChatCircleText size={24} weight="light" />
         </Link>
       )}

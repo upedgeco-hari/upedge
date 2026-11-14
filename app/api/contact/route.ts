@@ -55,6 +55,8 @@ export async function POST(req: Request) {
     ["Budget", d.budget],
     ["Location", d.location],
   ];
+  // Only present when the request started from a service or project page.
+  if (d.reference) rows.push(["Enquiring about", d.reference]);
 
   try {
     const resend = new Resend(RESEND_API_KEY);
