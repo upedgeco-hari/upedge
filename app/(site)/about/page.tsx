@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { CtaBanner } from "@/components/home/CtaBanner";
 import { CloudImage } from "@/components/media/CloudImage";
 import { Parallax } from "@/components/ui/Parallax";
@@ -5,7 +6,7 @@ import { PageHero } from "@/components/ui/PageHero";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Rise } from "@/components/ui/Rise";
-import { certifications, companyTimeline, media, site, team, values } from "@/data/site";
+import { companyTimeline, media, site, values } from "@/data/site";
 import { isLive } from "@/lib/cloudinary";
 import { buildMetadata } from "@/lib/seo";
 
@@ -20,7 +21,7 @@ export default function AboutPage() {
     <>
       <PageHero
         title="A pinnacle of premium construction."
-        lead="UPEDGE designs and builds homes, commercial spaces and renovations with careful planning, clear communication and workmanship that lasts."
+        lead="UPEDGE designs and builds homes, commercial spaces and interiors with careful planning, clear communication and workmanship that lasts."
       />
 
       {/* Story */}
@@ -40,12 +41,12 @@ export default function AboutPage() {
           </Reveal>
           <Reveal delay={0.08}>
             <p className="text-ink-2">
-              [Write two or three short paragraphs about how {site.name} started, who is behind it and what drives the team. Keep it factual and personal.]
+              {site.name} was established in 2020 and works from Suryanagar, Madurai. Led by founder Hariharan, the company takes on planning, construction, interiors, design and landscaping.
             </p>
           </Reveal>
           <Reveal delay={0.16}>
             <p className="text-ink-2">
-              What we can say today is how we work: one team across design, approvals and construction, written estimates, and quality checks at every stage.
+              We work as one team across design, approvals and construction, with written estimates and quality checks at every stage. Our work spans districts across Tamil Nadu, along with Bangalore and Kerala.
             </p>
           </Reveal>
         </div>
@@ -80,51 +81,21 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Team */}
-      <section className="section-y edge-top">
-        <div className="container-x">
-          <SectionHeader eyebrow="Team" title="The people behind the build" />
-          <ul className="block-gap grid grid-cols-2 gap-x-5 gap-y-12 lg:grid-cols-4">
-            {team.map((m, i) => (
-              <Reveal as="li" key={m.photo.publicId} delay={(i % 4) * 0.08}>
-                <div className="bezel">
-                  <div className="relative aspect-[4/5] overflow-hidden rounded-inner">
-                    <CloudImage media={m.photo} sizes="(min-width: 1024px) 22vw, 46vw" />
-                  </div>
-                </div>
-                <p className="mt-5 font-medium">{m.name}</p>
-                <p className="text-sm text-muted">{m.role}</p>
-              </Reveal>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* Certifications */}
-      <section className="section-y edge-top">
-        <div className="container-x grid gap-12 lg:grid-cols-12 lg:gap-8">
-          <SectionHeader className="lg:col-span-4" size="sm" title="Certifications and registrations" />
-          <ul className="grid gap-4 sm:grid-cols-2 lg:col-span-7 lg:col-start-6 lg:grid-cols-3">
-            {certifications.map((c, i) => (
-              <Reveal as="li" key={i} delay={i * 0.08} className="rounded-card bg-surface p-6 shadow-[inset_0_0_0_1px_var(--line)]">
-                <p className="font-medium">{c.title}</p>
-                <p className="mt-2 text-sm text-muted">{c.body}</p>
-              </Reveal>
-            ))}
-          </ul>
-        </div>
-      </section>
-
       {/* Timeline */}
       <section className="section-y edge-top">
         <div className="container-x">
           <SectionHeader eyebrow="Timeline" title="Our journey" />
           <ol className="block-gap divide-y divide-line border-y border-line">
             {companyTimeline.map((t, i) => (
-              <Reveal as="li" key={i} delay={i * 0.06} className="grid gap-3 py-8 md:grid-cols-12 md:items-baseline">
-                <p className="display-3 tabular md:col-span-3">{t.year}</p>
-                <h3 className="text-xl font-medium md:col-span-4">{t.title}</h3>
-                <p className="text-ink-2 md:col-span-5">{t.text}</p>
+              <Reveal as="li" key={i} delay={i * 0.06} className="grid gap-3 py-8 md:grid-cols-12 md:items-center md:gap-8">
+                <p className="display-3 tabular md:col-span-2">{t.year}</p>
+                {t.photo && (
+                  <div className="relative aspect-[4/5] w-40 overflow-hidden rounded-inner md:col-span-2">
+                    <Image src={t.photo.src} alt={t.photo.alt} fill sizes="160px" className="object-cover" />
+                  </div>
+                )}
+                <h3 className="text-xl font-medium md:col-span-3 md:col-start-6">{t.title}</h3>
+                <p className="text-ink-2 md:col-span-4">{t.text}</p>
               </Reveal>
             ))}
           </ol>

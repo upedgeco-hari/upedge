@@ -44,7 +44,7 @@ export default function ContactPage() {
                     <dt className="text-sm text-muted">{label}</dt>
                     <dd className="mt-0.5">
                       {href ? (
-                        <a href={href} className="link-line">
+                        <a href={href} className="link-line inline-block">
                           {value}
                         </a>
                       ) : (

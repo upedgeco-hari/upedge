@@ -36,6 +36,8 @@ export function SmoothScroll() {
         syncTouch: false,
         // Anchor jumps land below the floating header instead of under it.
         anchors: { offset: -112 },
+        // A tap on a link ends the glide, so the next page does not keep scrolling.
+        stopInertiaOnNavigate: true,
       });
 
       const unregister = registerScroller(lenis);

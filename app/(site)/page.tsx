@@ -1,10 +1,13 @@
 import { AboutPreview } from "@/components/home/AboutPreview";
 import { CtaBanner } from "@/components/home/CtaBanner";
 import { FeaturedProjects } from "@/components/home/FeaturedProjects";
+import { HappyFamilies } from "@/components/home/HappyFamilies";
 import { Hero } from "@/components/home/Hero";
+import { InstagramPosts } from "@/components/home/InstagramPosts";
 import { ProcessTimeline } from "@/components/home/ProcessTimeline";
 import { ServiceAreas } from "@/components/home/ServiceAreas";
 import { ServicesSection } from "@/components/home/ServicesSection";
+import { SiteWork } from "@/components/home/SiteWork";
 import { Stats } from "@/components/home/Stats";
 import { Testimonials } from "@/components/home/Testimonials";
 import { WhyUpedge } from "@/components/home/WhyUpedge";
@@ -28,8 +31,11 @@ export default function HomePage() {
       <FeaturedProjects />
       <WhyUpedge />
       <ProcessTimeline />
+      <SiteWork />
       <ServiceAreas />
+      <HappyFamilies />
       <Testimonials items={testimonials} />
+      <InstagramPosts />
       <CtaBanner />
     </>
   );

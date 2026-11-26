@@ -5,8 +5,8 @@ export const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ?? "";
 /** True when real Cloudinary delivery is possible. */
 export const cloudinaryReady = CLOUD_NAME.length > 0;
 
-/** True when this image should be fetched from Cloudinary rather than shown as a placeholder. */
-export const isLive = (m: { placeholder?: boolean }) => cloudinaryReady && !m.placeholder;
+/** True when a real image (local file or Cloudinary) renders rather than a placeholder. */
+export const isLive = (m: { src?: string; placeholder?: boolean }) => !m.placeholder && (!!m.src || cloudinaryReady);
 
 /** Tiny blurred preview used as the blur-up placeholder (about 1 KB). */
 export function blurUrl(publicId: string) {

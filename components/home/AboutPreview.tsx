@@ -13,7 +13,7 @@ export function AboutPreview() {
       <div className="container-x grid items-center gap-12 lg:grid-cols-12 lg:gap-8">
         <Reveal variant="media" className="relative lg:col-span-6">
           <div className="bezel">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-inner">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-inner short:aspect-[16/10]">
               <Parallax distance={60} scale={1.1} disabled={!isLive(media.about)}>
                 <CloudImage media={media.about} sizes="(min-width: 1024px) 46vw, 100vw" />
               </Parallax>

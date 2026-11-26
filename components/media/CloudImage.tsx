@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { CldImage } from "next-cloudinary";
 import { CLOUD_NAME, blurUrl } from "@/lib/cloudinary";
 import { cn } from "@/lib/cn";
@@ -15,15 +16,35 @@ type Props = {
   className?: string;
   /** Pin the placeholder label to the top (for frames with text overlaid at the bottom). */
   placeholderTop?: boolean;
+  /** "contain" shows the whole image (story viewer, lightbox) instead of cropping to the frame. */
+  fit?: "cover" | "contain";
 };
 
 /**
- * Every Cloudinary image on the site goes through this component:
- * f_auto + q_auto, responsive srcset, blur-up placeholder, lazy loading.
+ * Every content image on the site goes through this component. Files in public/ (media.src)
+ * are optimised by next/image; everything else comes from Cloudinary (f_auto + q_auto,
+ * blur-up). Both get a responsive srcset and lazy loading.
  * It fills its (relatively positioned) parent, so give the parent an aspect ratio
  * to avoid layout shift.
  */
-export function CloudImage({ media, sizes, priority, className, placeholderTop }: Props) {
+export function CloudImage({ media, sizes, priority, className, placeholderTop, fit = "cover" }: Props) {
+  const style = fit === "cover" && media.position ? { objectPosition: media.position } : undefined;
+  const classes = cn(fit === "cover" ? "object-cover" : "object-contain", className);
+
+  if (media.src && !media.placeholder) {
+    return (
+      <Image
+        src={media.src}
+        alt={media.alt}
+        fill
+        sizes={sizes}
+        loading={priority ? "eager" : undefined}
+        fetchPriority={priority ? "high" : undefined}
+        className={classes}
+        style={style}
+      />
+    );
+  }
   if (media.placeholder || !CLOUD_NAME) {
     return <Placeholder label={media.label ?? media.publicId} className={className} top={placeholderTop} />;
   }
@@ -36,7 +57,8 @@ export function CloudImage({ media, sizes, priority, className, placeholderTop }
       priority={priority}
       placeholder="blur"
       blurDataURL={blurUrl(media.publicId)}
-      className={cn("object-cover", className)}
+      className={classes}
+      style={style}
     />
   );
 }

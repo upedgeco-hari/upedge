@@ -39,7 +39,7 @@ export function Hero() {
         <div className="absolute inset-0 bg-[radial-gradient(115%_75%_at_50%_14%,transparent_44%,rgb(0_0_0/0.5))] lg:bg-[radial-gradient(130%_100%_at_72%_8%,transparent_38%,rgb(0_0_0/0.62))]" />
       </div>
 
-      <div className="container-x relative z-10 order-1 pt-24 lg:order-0 lg:pt-40">
+      <div className="container-x relative z-10 order-1 pt-24 short:pt-20 lg:order-0 lg:pt-40">
         <Rise className="flex flex-wrap items-center gap-x-4 gap-y-2">
           <span className="flex items-center gap-3">
             <span className="h-px w-9 bg-accent" aria-hidden="true" />
@@ -51,8 +51,9 @@ export function Hero() {
         </Rise>
       </div>
 
-      {/* Portrait: contained card below lg, positioned cutout beside the headline from lg up. */}
-      <div className="relative z-10 order-2 mx-auto mt-6 aspect-[2/3] w-[70%] max-w-64 overflow-hidden rounded-card sm:max-w-xs md:max-w-sm lg:absolute lg:inset-y-0 lg:right-[max(2%,calc((100%-var(--container))/2))] lg:order-0 lg:mx-0 lg:mt-0 lg:mb-0 lg:aspect-auto lg:w-[38%] lg:max-w-none lg:rounded-none xl:w-[36%] xl:max-w-[44rem]">
+      {/* Portrait: contained card below lg (sized by screen height, so the buttons stay in view),
+          positioned cutout beside the headline from lg up and on a sideways phone. */}
+      <div className="relative z-10 order-2 mx-auto mt-6 aspect-[2/3] w-[min(70%,28dvh)] max-w-64 overflow-hidden rounded-card sm:max-w-xs md:max-w-sm lg:absolute lg:inset-y-0 lg:right-[max(2%,calc((100%-var(--container))/2))] lg:order-0 lg:mx-0 lg:mt-0 lg:mb-0 lg:aspect-auto lg:w-[38%] lg:max-w-none lg:rounded-none xl:w-[36%] xl:max-w-[44rem] short:absolute short:inset-y-0 short:right-[6%] short:mx-0 short:mt-0 short:aspect-auto short:w-[32%] short:max-w-none short:rounded-none">
         <Image
           src="/images/hero-portrait.webp"
           alt="Hariharan"
@@ -70,12 +71,12 @@ export function Hero() {
         aria-hidden="true"
       />
 
-      <div className="container-x relative z-10 order-3 mt-4 pb-10 lg:order-0 lg:mt-0 lg:pb-14">
+      <div className="container-x relative z-10 order-3 mt-4 pb-10 short:mt-3 short:pb-6 short:pr-[40%] lg:order-0 lg:mt-0 lg:pb-14">
         {/* No entrance delay on the headline: it is the LCP element. */}
         <Rise className="max-w-6xl lg:max-w-md xl:max-w-xl">
-          <h1 className="display-1 text-balance">A Pinnacle Of Premium Construction.</h1>
+          <h1 className="display-1 text-balance short:text-[2.25rem]!">A Pinnacle Of Premium Construction.</h1>
         </Rise>
-        <Rise delay={0.3} className="mt-10 flex flex-wrap items-center gap-3 lg:mt-16">
+        <Rise delay={0.3} className="mt-6 flex flex-wrap items-center gap-3 short:mt-5 sm:mt-10 lg:mt-16">
           <Magnetic>
             <Button href="/contact">{cta.quote}</Button>
           </Magnetic>

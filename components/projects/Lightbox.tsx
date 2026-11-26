@@ -139,8 +139,8 @@ export function Lightbox({ images, index, onClose, onIndex }: Props) {
                 dragConstraints={{ left: -dragX, right: dragX, top: -dragY, bottom: dragY }}
                 dragElastic={0.1}
               >
-                <div className="absolute inset-0 [&_img]:object-contain!">
-                  <CloudImage media={img} sizes="100vw" />
+                <div className="absolute inset-0">
+                  <CloudImage media={img} sizes="100vw" fit="contain" />
                 </div>
               </motion.div>
             </motion.div>

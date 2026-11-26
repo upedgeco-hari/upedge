@@ -1,6 +1,6 @@
 # UPEDGE website
 
-Premium construction company site. Next.js 16 (App Router), TypeScript, Tailwind v4, Motion, Lenis, React Hook Form + Zod, Cloudinary, Resend.
+Premium construction company site. Next.js 16 (App Router), TypeScript, Tailwind v4, Motion, Lenis, React Hook Form + Zod, Cloudinary.
 
 ```bash
 npm install
@@ -8,7 +8,7 @@ cp .env.example .env.local   # then fill in the values (see below)
 npm run dev                  # http://localhost:3000
 ```
 
-The site runs without any environment variables: images show as clearly labelled placeholders and the quote form accepts submissions without sending email (development only).
+The site runs without any environment variables: images show as clearly labelled placeholders and the quote form opens WhatsApp with the visitor's details.
 
 Production build: `npm run build && npm start`.
 
@@ -19,7 +19,7 @@ Production build: `npm run build && npm start`.
 | What you want to change | File |
 | --- | --- |
 | Colours, radii, spacing, z-index, dark mode | `styles/tokens.css` |
-| Company details, nav, stats, differentiators, process, team, values | `data/site.ts` |
+| Company details, nav, stats, differentiators, process, values | `data/site.ts` |
 | Projects (case studies and photos) | `data/projects.ts` |
 | Services | `data/services.ts` |
 | Testimonials | `data/testimonials.ts` |
@@ -50,9 +50,8 @@ Anything written in `[BRACKETS]` is an unknown that still needs a real value (`[
 ```
 upedge/
   site/        hero, about-main, about-detail
-  team/        01, 02, 03, 04
-  services/    residential-construction, commercial-construction, renovation-and-remodelling,
-               interiors-and-fit-outs, architectural-planning, project-management
+  services/    residential-construction, commercial-construction,
+               interiors-and-fit-outs, architectural-planning, project-management, landscaping
   blog/        home-construction-budget, before-construction, renovate-or-rebuild
   projects/
     {project-slug}/
@@ -68,8 +67,8 @@ Upload with **Public ID** set to the path above (no file extension), for example
 
 ### Switching a placeholder to a real image
 
-* **Site, team, services, blog images:** in the relevant data file, change `placeholder: true` to `placeholder: false` on that image (and set `publicId` if you used a different path).
-* **Project photos:** set `status: "live"` on the project in `data/projects.ts`. All of its frames switch to Cloudinary at once. To swap a single photo, change its public ID in the `shots` list (one line per image).
+* **Site, services, blog images:** in the relevant data file, change `placeholder: true` to `placeholder: false` on that image (and set `publicId` if you used a different path).
+* **Local files:** an image with a `src` is served from `public/` and does not need Cloudinary. The current project, About, blog and some service images work this way.
 
 ---
 
@@ -77,15 +76,16 @@ Upload with **Public ID** set to the path above (no file extension), for example
 
 **Manual (default)**
 
-1. Upload the photos to `upedge/projects/{slug}/` named `01-before`, `02-foundation`, ...
-2. In `data/projects.ts`, copy an existing `project({...})` entry and change `slug`, `title`, `category`, `location`, `area`, `duration`, `year`, `clientType`, `summary`, `story` and the `shots` list (`[file name, stage label, caption]`).
-3. Set `status: "live"`. Optionally set `pair: true` to show the before/after slider (it uses the first and last photo).
-4. Add the slug to `featuredSlugs` if it should appear on the home page.
+1. Put the images in `public/images/projects/{slug}/` (JPG, about 2000px on the long edge).
+2. In `data/projects.ts`, copy an existing `project({...})` entry and change `slug`, `title`, `category`, `summary`, `story`, `coverFile` and the `shots` list (`file`, `stage`, `caption`, pixel `size`, optional crop `position`).
+3. Set `kind: "design"` for 3D visualisations or `kind: "built"` for site photographs. Add `location`, `area`, `duration`, `year` and `clientType` only when known; unknown facts are hidden.
+4. Optionally add `compare` (two shots from the same camera angle) to show the comparison slider.
+5. Add the slug to `featuredSlugs` if it should appear on the home page.
 
 **Automatic (optional): "upload and add one entry"**
 
 1. In `.env.local` set `CLOUDINARY_DISCOVERY=true` (the three Cloudinary variables are required).
-2. Add the project entry as above (the `shots` list can be a placeholder, it is ignored once 5 or more images are found).
+2. Add the project entry as above (the local `shots` are replaced once 5 or more Cloudinary images are found).
 3. Images are read from the project's Cloudinary asset folder `upedge/projects/{slug}` via the Admin Search API, sorted by filename, and cached for one hour (`lib/cloudinary-discover.ts`). The stage label comes from the file name: `02-foundation` becomes "Foundation". Captions and alt text are read from the image's Cloudinary contextual metadata (`caption`, `alt`) when present.
 4. To switch it off again, set `CLOUDINARY_DISCOVERY=false`. Nothing else changes.
 
@@ -93,13 +93,13 @@ This needs your Cloudinary folders to be **asset folders** (the default on new a
 
 ---
 
-## 4. The project "construction story"
+## 4. The project image story
 
-On each project page the photos play as one sequence:
+On each project page the images play as one sequence:
 
 * **Scroll mode (desktop default):** a full-height panel stays pinned and changes frame as you scroll, with the stage label, a counter, a segmented progress bar and the caption.
 * **Browse mode (always on phones, toggle on desktop):** previous/next buttons, left and right arrow keys, swipe, and a thumbnail strip.
-* A fullscreen **lightbox** (zoom, arrows, Esc) and an optional **before/after slider**.
+* A fullscreen **lightbox** (zoom, arrows, Esc) and an optional **comparison slider** (day/night, before/after).
 
 The next frame is always preloaded, and the layout is fixed-height so nothing shifts. Reduced-motion users get instant changes.
 
@@ -126,19 +126,24 @@ This rewrites `components/brand/logo-paths.ts`, `app/icon.svg` and `public/brand
 
 ---
 
-## 6. Quote form and email
+## Reel videos
 
-`POST /api/contact` validates with the same Zod schema as the form, has a honeypot field and a small in-memory rate limit, then sends the email with [Resend](https://resend.com).
+The home page Instagram cards link to Instagram until a video file exists. To play one on the site, save your own video in `public/videos/` with the card's name and rebuild:
 
-```
-RESEND_API_KEY=...
-CONTACT_TO_EMAIL=you@yourcompany.com
-CONTACT_FROM_EMAIL="UPEDGE <quotes@your-verified-domain.com>"
-```
+| File | Reel |
+| --- | --- |
+| `work-in-progress.mp4` | Raising structures, building legacies |
+| `every-brick.mp4` | Every brick has a purpose |
+| `perfect-finish.mp4` | Behind every beautiful space |
+| `todays-dust.mp4` | Today's dust, tomorrow's dream |
 
-Verify the sending domain in Resend first. Without these variables the API returns an error in production (so a lead is never silently lost) and accepts the request without sending in development.
+Use H.264 MP4, 720p or 1080p, ideally under 20 MB each. The list is `instagramPosts` in `data/site.ts`.
 
-Prefer Nodemailer/SMTP? Replace the `resend.emails.send(...)` call in `app/api/contact/route.ts`; nothing else depends on it.
+---
+
+## 6. Quote form (WhatsApp)
+
+The form validates with `lib/contact-schema.ts`, writes the answers into a message (`quoteMessage` in `lib/enquiry.ts`) and opens `https://wa.me/` for the number in `site.whatsapp` (`data/site.ts`). The visitor presses send in WhatsApp. No server, email service or API key is involved.
 
 ---
 

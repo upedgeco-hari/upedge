@@ -1,6 +1,7 @@
 import { projects } from "@/data/projects";
 import { services } from "@/data/services";
-import { projectTypes } from "@/lib/contact-schema";
+import { digits, site } from "@/data/site";
+import { projectTypes, type ContactInput } from "@/lib/contact-schema";
 import type { Project, ProjectCategory } from "@/lib/types";
 
 /**
@@ -10,8 +11,8 @@ import type { Project, ProjectCategory } from "@/lib/types";
  * Asking a homeowner to re-describe the service page they were just reading is the usual
  * way construction sites lose an enquiry. Every "Get a quote" on a service or project page
  * carries that page with it, so the form arrives already knowing the answer to its first
- * question, the WhatsApp message opens pre-written, and the email that reaches the office
- * says which page the request came from.
+ * question, and the WhatsApp message opens pre-written, saying which page the request
+ * came from.
  */
 
 export type ProjectType = (typeof projectTypes)[number];
@@ -27,16 +28,15 @@ export type EnquiryContext = {
 const serviceType: Record<string, ProjectType> = {
   "residential-construction": "Residential construction",
   "commercial-construction": "Commercial construction",
-  "renovation-and-remodelling": "Renovation and remodelling",
   "interiors-and-fit-outs": "Interiors and fit-outs",
   "architectural-planning": "Architectural planning",
   "project-management": "Project management",
+  landscaping: "Landscaping",
 };
 
 const categoryType: Record<ProjectCategory, ProjectType> = {
   Residential: "Residential construction",
   Commercial: "Commercial construction",
-  Renovation: "Renovation and remodelling",
   Interiors: "Interiors and fit-outs",
 };
 
@@ -75,6 +75,25 @@ export function pageEnquiry(pathname: string): EnquiryContext | null {
     if (p) return projectEnquiry(p);
   }
   return null;
+}
+
+/** Link to the company's WhatsApp chat with a message already typed. */
+export const whatsappUrl = (text: string) => `https://wa.me/${digits(site.whatsapp)}?text=${encodeURIComponent(text)}`;
+
+/** The quote form's answers, laid out as a WhatsApp message. */
+export function quoteMessage(d: ContactInput, about?: string) {
+  return [
+    "Hi UPEDGE, I would like a free quote.",
+    "",
+    `Name: ${d.name}`,
+    `Phone: ${d.phone}`,
+    `Project type: ${d.projectType}`,
+    `Budget: ${d.budget}`,
+    `Location: ${d.location}`,
+    ...(about ? [`Enquiring about: ${about}`] : []),
+    "",
+    d.message,
+  ].join("\n");
 }
 
 /** Pre-written WhatsApp message, so the chat opens with the subject already in it. */

@@ -1,27 +1,45 @@
 import type { Metadata } from "next";
 import { site, hasNumber, serviceAreas } from "@/data/site";
+import { imageUrl, isLive, ogImageUrl } from "@/lib/cloudinary";
+import type { Media } from "@/lib/types";
 
 export const absoluteUrl = (path = "/") => new URL(path, site.url).toString();
+
+/** Absolute URL of a real image, for JSON-LD. Undefined for placeholders. */
+export function mediaUrl(m: Media) {
+  if (!isLive(m)) return undefined;
+  return m.src ? absoluteUrl(m.src) : imageUrl(m.publicId);
+}
+
+type ShareImage = { url: string; width?: number; height?: number };
+
+/** Social share image for a cover. Undefined falls back to the generated default. */
+export function shareImage(m: Media): ShareImage | undefined {
+  if (!isLive(m)) return undefined;
+  return m.src
+    ? { url: absoluteUrl(m.src), width: m.width, height: m.height }
+    : { url: ogImageUrl(m.publicId), width: 1200, height: 630 };
+}
 
 type Args = {
   title: string;
   description: string;
   path: string;
-  /** Absolute image URL (use Cloudinary's ogImageUrl for covers). Falls back to the generated default. */
-  image?: string;
+  /** Use shareImage(cover). Falls back to the generated default. */
+  image?: ShareImage;
   type?: "website" | "article";
 };
 
 /** Per-page metadata with canonical, Open Graph and Twitter cards. */
 export function buildMetadata({ title, description, path, image, type = "website" }: Args): Metadata {
   const url = absoluteUrl(path);
-  const images = image ? [{ url: image, width: 1200, height: 630, alt: title }] : undefined;
+  const images = image ? [{ ...image, alt: title }] : undefined;
   return {
     title,
     description,
     alternates: { canonical: url },
     openGraph: { title, description, url, siteName: site.name, type, images },
-    twitter: { card: "summary_large_image", title, description, images: image ? [image] : undefined },
+    twitter: { card: "summary_large_image", title, description, images: image ? [image.url] : undefined },
   };
 }
 

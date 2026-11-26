@@ -1,7 +1,7 @@
-import { Armchair, Buildings, Compass, Hammer, House, Kanban } from "@phosphor-icons/react/dist/ssr";
+import { Armchair, Buildings, Compass, House, Kanban, Plant } from "@phosphor-icons/react/dist/ssr";
 import type { ServiceIcon as Name } from "@/lib/types";
 
-const map = { house: House, buildings: Buildings, hammer: Hammer, armchair: Armchair, compass: Compass, kanban: Kanban };
+const map = { house: House, buildings: Buildings, armchair: Armchair, compass: Compass, kanban: Kanban, plant: Plant };
 
 export function ServiceIcon({ name, className }: { name: Name; className?: string }) {
   const Icon = map[name];

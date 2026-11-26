@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "../styles/tokens.css";
 
+/* A phone held sideways: wide enough for two columns, too short to stack them. */
+@custom-variant short (@media (orientation: landscape) and (max-height: 560px) and (max-width: 1023px));
+
 /* Map tokens to Tailwind utilities (bg-paper, text-ink, border-line, shadow-elev-3, ...) */
 @theme inline {
   --color-paper: var(--paper);
@@ -352,8 +355,8 @@ html.lenis body {
 
 /* Refracting glass: blur plus a bright inner top edge, so the panel has a real edge. */
 @utility glass {
+  /* Standard property only: the build adds the prefix. Writing both drops this one. */
   backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
   background: color-mix(in srgb, var(--paper) 92%, transparent);
   box-shadow:
     inset 0 1px 0 color-mix(in srgb, white 55%, transparent),
@@ -543,11 +546,6 @@ html.lenis body {
 }
 .marquee-track[data-dir="right"] {
   animation-name: marquee-right;
-}
-/* Hold the band still while it is being read or hovered. */
-.marquee-row:hover .marquee-track,
-.marquee-row:focus-within .marquee-track {
-  animation-play-state: paused;
 }
 .place-word {
   color: transparent;

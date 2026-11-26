@@ -1,95 +1,31 @@
 import type { Testimonial } from "@/lib/types";
 
-/** PLACEHOLDERS. Replace each entry with a real client quote (max three lines) and real attribution. */
+const comment = (name: string, quote: string, post: string): Testimonial => ({
+  name,
+  quote,
+  role: "Comment on Instagram",
+  href: `https://www.instagram.com/reel/${post}/`,
+});
+
+/**
+ * Public comments on @upedge_co reels. Words and spelling are as posted, with emoji left out.
+ * These are viewers' comments, not verified client reviews, so the section heading must keep
+ * saying they come from Instagram. Do not lengthen or rewrite them. An empty list hides the section.
+ */
 export const testimonials: Testimonial[] = [
-  {
-    quote: "[Client quote. Keep it to two or three lines about the experience of working with UPEDGE.]",
-    name: "[CLIENT NAME]",
-    role: "[Homeowner, City]",
-    project: "[Project name]",
-  },
-  {
-    quote: "[Client quote. Mention what stood out, such as communication, quality or handling of the schedule.]",
-    name: "[CLIENT NAME]",
-    role: "[Developer, Company]",
-    project: "[Project name]",
-  },
-  {
-    quote: "[Client quote. A short, specific line about the finished result works best.]",
-    name: "[CLIENT NAME]",
-    role: "[Business owner, Company]",
-    project: "[Project name]",
-  },
-  {
-    quote: "[Client quote. Note how the team handled a change mid-project, if that happened.]",
-    name: "[CLIENT NAME]",
-    role: "[Homeowner, City]",
-    project: "[Project name]",
-  },
-  {
-    quote: "[Client quote. A line about site cleanliness, safety or day-to-day professionalism.]",
-    name: "[CLIENT NAME]",
-    role: "[Property manager, Company]",
-    project: "[Project name]",
-  },
-  {
-    quote: "[Client quote. Something about the handover process and final walkthrough.]",
-    name: "[CLIENT NAME]",
-    role: "[Homeowner, City]",
-    project: "[Project name]",
-  },
-  {
-    quote: "[Client quote. A comment on budget transparency or accurate quoting.]",
-    name: "[CLIENT NAME]",
-    role: "[Business owner, Company]",
-    project: "[Project name]",
-  },
-  {
-    quote: "[Client quote. How the design and architectural planning phase went.]",
-    name: "[CLIENT NAME]",
-    role: "[Architect / Developer, Company]",
-    project: "[Project name]",
-  },
-  {
-    quote: "[Client quote. Something about renovation work done while the space stayed in use.]",
-    name: "[CLIENT NAME]",
-    role: "[Business owner, Company]",
-    project: "[Project name]",
-  },
-  {
-    quote: "[Client quote. A line about responsiveness to calls, messages or site visits.]",
-    name: "[CLIENT NAME]",
-    role: "[Homeowner, City]",
-    project: "[Project name]",
-  },
-  {
-    quote: "[Client quote. Would they recommend UPEDGE to others, and why.]",
-    name: "[CLIENT NAME]",
-    role: "[Homeowner, City]",
-    project: "[Project name]",
-  },
-  {
-    quote: "[Client quote. Something about interior fit-out quality or finishing details.]",
-    name: "[CLIENT NAME]",
-    role: "[Homeowner, City]",
-    project: "[Project name]",
-  },
-  {
-    quote: "[Client quote. A comment on how delays or issues, if any, were resolved.]",
-    name: "[CLIENT NAME]",
-    role: "[Developer, Company]",
-    project: "[Project name]",
-  },
-  {
-    quote: "[Client quote. What made UPEDGE different from other contractors considered.]",
-    name: "[CLIENT NAME]",
-    role: "[Business owner, Company]",
-    project: "[Project name]",
-  },
-  {
-    quote: "[Client quote. A short line summing up the overall experience in one sentence.]",
-    name: "[CLIENT NAME]",
-    role: "[Homeowner, City]",
-    project: "[Project name]",
-  },
+  comment("@tenashkumar.mani_24", "I need to build my home like this already I have plans you can do ?", "DHgK8YIhC5D"),
+  comment("@drbalacu", "What a masterpiece! The design and execution are just wow.", "DZuvEhKTqo4"),
+  comment("@venkatesh.kumar.3954546", "Eagerly waiting to see the interior of the house!!", "DZuvEhKTqo4"),
+  comment("@saravanankmu", "நான் ரொம்ப சந்தோஷமா இருக்கேன் தம்பி", "DFj-lKUhpfW"),
+  comment("@rp_homes_and_designs", "Looks great, what is the width of the strip light ?", "Df7LHeQIxkC"),
+  comment("@goldy379", "It represnts life it self in ture form of happiness", "DXPIJoDAXHF"),
+  comment("@_shyju.vc_", "Very realistic 3D animation 99 out of 100", "DXPIJoDAXHF"),
+  comment("@karthick_signature", "Very nice bro I call u in future", "C9cYKZKhblw"),
+  comment("@ruslan_rj___", "Risky stair but trendfull for house", "DcnrI5fABqv"),
+  comment("@siddu_sgr", "Sir superb plz update interior view", "DHOIK9eBkXJ"),
+  comment("@_bala_atman", "Boundary wall it's nice", "DIGxKPPhlI1"),
+  comment("@mytonbuildingmaterial", "Beautifully designed", "DHgK8YIhC5D"),
+  comment("@vijay_dechu", "So beautiful", "DHOIK9eBkXJ"),
+  comment("@prasitha", "Ultimate, Bro", "DZuvEhKTqo4"),
+  comment("@krishnangobi", "SUPER SIR", "DavIRYZNPdN"),
 ];

@@ -16,7 +16,7 @@ const round =
   "grid size-12 place-items-center rounded-full bg-on-inverse/12 text-on-inverse backdrop-blur-md transition-[background-color,color,transform] duration-500 ease-smooth hover:bg-on-inverse hover:text-inverse active:scale-95 disabled:opacity-30 disabled:hover:bg-on-inverse/12 disabled:hover:text-on-inverse";
 
 /**
- * The construction story.
+ * The project story: design views or construction stages.
  *  - Scroll mode (desktop default): a sticky full-height panel changes image as you scroll.
  *  - Browse mode (always on phones): step with buttons, arrow keys, swipe or thumbnails.
  * Both share one index, a stage label, a counter, a segmented progress bar and the lightbox.
@@ -24,6 +24,7 @@ const round =
 export function ProjectStory({ project }: { project: Project }) {
   const { images } = project;
   const n = images.length;
+  const many = n > 1;
   const reduce = useReducedMotion();
   const desktop = useMediaQuery("(min-width: 1024px)", true);
   const [mode, setMode] = useState<"scroll" | "browse">("scroll");
@@ -91,7 +92,7 @@ export function ProjectStory({ project }: { project: Project }) {
     <section
       ref={sectionRef}
       aria-roledescription="carousel"
-      aria-label={`${project.title} construction story`}
+      aria-label={`${project.title} images`}
       className="relative h-[100dvh] lg:h-[var(--story-h)]"
       style={{ ["--story-h" as string]: mode === "scroll" ? `${n * 100}dvh` : "100dvh" }}
     >
@@ -108,7 +109,7 @@ export function ProjectStory({ project }: { project: Project }) {
                 transition={{ duration: reduce ? 0 : 1, ease }}
                 aria-hidden={i !== active}
               >
-                <CloudImage media={img} sizes="100vw" priority={i === 0} />
+                <CloudImage media={img} sizes="100vw" priority={i === 0} fit={img.src ? "contain" : "cover"} />
               </motion.div>
             ) : null,
           )}
@@ -132,7 +133,7 @@ export function ProjectStory({ project }: { project: Project }) {
             <span className="text-on-inverse-muted"> / {project.category}</span>
           </p>
           <div className="pointer-events-auto flex items-center gap-2">
-            <div role="group" aria-label="Viewing mode" className="hidden rounded-full bg-on-inverse/12 p-1 backdrop-blur-md lg:flex">
+            <div role="group" aria-label="Viewing mode" className={cn("hidden rounded-full bg-on-inverse/12 p-1 backdrop-blur-md", many && "lg:flex")}>
               {(["scroll", "browse"] as const).map((m) => (
                 <button
                   key={m}
@@ -177,8 +178,8 @@ export function ProjectStory({ project }: { project: Project }) {
             <p className="measure mt-4 min-h-[3.5rem] text-on-inverse/85 [@media(max-height:560px)]:hidden">{current.caption}</p>
           </div>
 
-          <div className="pointer-events-auto flex flex-col items-start gap-5 pr-16 lg:items-end">
-            <ul className="no-scrollbar hidden max-w-[34rem] gap-2 overflow-x-auto md:flex" aria-label="Frames">
+          <div className={cn("pointer-events-auto flex-col items-start gap-5 pr-16 lg:items-end", many ? "flex" : "hidden")}>
+            <ul className="no-scrollbar hidden max-w-[34rem] gap-2 overflow-x-auto md:flex lg:max-w-[min(34rem,40vw)] [@media(max-height:560px)]:hidden!" aria-label="Frames">
               {images.map((img, i) => (
                 <li key={img.publicId}>
                   <button
@@ -212,7 +213,7 @@ export function ProjectStory({ project }: { project: Project }) {
         </div>
 
         {/* Slim segmented progress */}
-        <div className="absolute inset-x-0 bottom-0 flex gap-1 px-[var(--gutter)] pb-4" aria-hidden="true">
+        <div className={cn("absolute inset-x-0 bottom-0 gap-1 px-[var(--gutter)] pb-4", many ? "flex" : "hidden")} aria-hidden="true">
           {images.map((img, i) => (
             <span key={img.publicId} className="h-0.5 flex-1 overflow-hidden rounded-full bg-on-inverse/25">
               <span
