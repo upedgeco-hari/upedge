@@ -20,9 +20,7 @@ async function resolve(p: Project): Promise<Project> {
     status: "live",
     images: found,
     cover: { publicId: last.publicId, alt: `${p.title}, ${p.location}` },
-    beforeAfter: p.beforeAfter
-      ? { before: { ...found[0] }, after: { ...last } }
-      : undefined,
+    comparison: p.comparison ? { ...p.comparison, before: found[0], after: last } : undefined,
   };
 }
 

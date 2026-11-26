@@ -1,13 +1,13 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowCounterClockwise, CaretDown, CheckCircle, WarningCircle, X } from "@phosphor-icons/react/dist/ssr";
+import { ArrowCounterClockwise, CaretDown, WhatsappLogo, X } from "@phosphor-icons/react/dist/ssr";
 import { useEffect, useId, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 import { budgetRanges, contactSchema, projectTypes, type ContactInput } from "@/lib/contact-schema";
-import { enquiryFromParams, type EnquiryContext } from "@/lib/enquiry";
+import { enquiryFromParams, quoteMessage, whatsappUrl, type EnquiryContext } from "@/lib/enquiry";
 
 const field =
   "w-full rounded-input bg-surface px-4 py-3.5 text-base text-ink placeholder:text-muted " +
@@ -16,11 +16,9 @@ const field =
   "focus:shadow-[inset_0_0_0_2px_var(--ink),0_0_0_4px_var(--accent-wash)] focus:outline-none " +
   "aria-[invalid=true]:shadow-[inset_0_0_0_2px_var(--danger)]";
 
-type Status = "idle" | "success" | "error";
-
 const DRAFT_KEY = "upedge:enquiry-draft";
-/** Fields worth keeping. The honeypot and the carried reference are deliberately not. */
-const draftFields = ["name", "phone", "email", "projectType", "budget", "location", "message"] as const;
+/** Fields worth keeping between visits. */
+const draftFields = ["name", "phone", "projectType", "budget", "location", "message"] as const;
 
 function readDraft(): Partial<ContactInput> | null {
   try {
@@ -75,8 +73,8 @@ function Field({ id, label, error, children }: { id: string; label: string; erro
 
 export function ContactForm() {
   const uid = useId();
-  const [status, setStatus] = useState<Status>("idle");
-  const [serverError, setServerError] = useState("");
+  /** Set once the form has been handed to WhatsApp. */
+  const [chatUrl, setChatUrl] = useState("");
   const [context, setContext] = useState<EnquiryContext | null>(null);
   const [restored, setRestored] = useState(false);
   const {
@@ -85,7 +83,7 @@ export function ContactForm() {
     reset,
     setValue,
     getValues,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<ContactInput>({ resolver: zodResolver(contactSchema), mode: "onTouched" });
 
   /*
@@ -127,43 +125,36 @@ export function ContactForm() {
 
   const startFresh = () => {
     clearDraft();
-    reset({ name: "", phone: "", email: "", location: "", message: "" });
+    reset({ name: "", phone: "", location: "", message: "" });
     setRestored(false);
   };
 
-  const onSubmit = async (values: ContactInput) => {
-    setServerError("");
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...values, reference: context?.about }),
-      });
-      const json = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(json.error ?? "Something went wrong.");
-      clearDraft();
-      reset();
-      setRestored(false);
-      setStatus("success");
-    } catch (e) {
-      setServerError(e instanceof Error ? e.message : "Something went wrong.");
-      setStatus("error");
-    }
+  const onSubmit = (values: ContactInput) => {
+    // Saved straight away: nothing has been sent until the visitor presses send in WhatsApp.
+    writeDraft(values);
+    const url = whatsappUrl(quoteMessage(values, context?.about));
+    const chat = window.open(url, "_blank");
+    if (chat) chat.opener = null;
+    else window.location.assign(url); // pop-up blocked: open WhatsApp in this tab instead
+    setChatUrl(url);
   };
 
-  if (status === "success") {
+  if (chatUrl) {
     return (
       <div role="status" className="panel p-8 sm:p-12">
-        <CheckCircle size={44} weight="light" className="text-success" aria-hidden="true" />
-        <h2 className="display-3 mt-6">Thank you. Your request is in.</h2>
+        <WhatsappLogo size={44} weight="light" className="text-success" aria-hidden="true" />
+        <h2 className="display-3 mt-6">One last step: press send in WhatsApp.</h2>
         <p className="measure-sm mt-4 text-ink-2">
-          {context
-            ? `We will review your ${context.about.toLowerCase()} enquiry and contact you, usually within one working day.`
-            : "We will review the details and contact you, usually within one working day."}
+          Your details are typed into a chat with UPEDGE. We receive your request once you send it.
         </p>
-        <Button variant="outline" arrow={false} className="mt-8" type="button" onClick={() => setStatus("idle")}>
-          Send another request
-        </Button>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Button type="button" onClick={() => window.open(chatUrl, "_blank", "noopener,noreferrer")}>
+            Open WhatsApp again
+          </Button>
+          <Button variant="outline" arrow={false} type="button" onClick={() => setChatUrl("")}>
+            Edit details
+          </Button>
+        </div>
       </div>
     );
   }
@@ -213,9 +204,6 @@ export function ContactForm() {
           <input {...register("phone")} {...a11y("phone")} type="tel" autoComplete="tel" className={field} placeholder="+91 00000 00000" />
         </Field>
       </div>
-      <Field id={`${uid}-email`} label="Email" error={errors.email?.message}>
-        <input {...register("email")} {...a11y("email")} type="email" autoComplete="email" className={field} placeholder="you@example.com" />
-      </Field>
       <div className="grid gap-6 sm:grid-cols-2">
         <Field id={`${uid}-projectType`} label="Project type" error={errors.projectType?.message}>
           <div className="relative">
@@ -251,31 +239,14 @@ export function ContactForm() {
         <textarea {...register("message")} {...a11y("message")} rows={5} className={cn(field, "resize-y")} placeholder="Plot size, what you want to build, timeline, anything that helps." />
       </Field>
 
-      {/* Honeypot, hidden from people and assistive tech */}
-      <div className="absolute -left-[9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
-        <label>
-          Company
-          <input type="text" tabIndex={-1} autoComplete="off" {...register("company")} />
-        </label>
-      </div>
-
-      {status === "error" && (
-        <p role="alert" className="flex items-start gap-3 rounded-input bg-danger/10 p-4 text-danger">
-          <WarningCircle size={22} weight="light" className="mt-0.5 shrink-0" aria-hidden="true" />
-          {serverError}
-        </p>
-      )}
-
       <div className="flex flex-wrap items-center gap-4">
-        <Button type="submit" disabled={isSubmitting} arrow={!isSubmitting}>
+        <Button type="submit">
           <span className="inline-flex items-center gap-2.5">
-            {isSubmitting && <span className="spinner" aria-hidden="true" />}
-            {isSubmitting ? "Sending" : "Send Request"}
+            <WhatsappLogo size={20} weight="light" aria-hidden="true" />
+            Send on WhatsApp
           </span>
         </Button>
-        <p className="text-sm text-muted" aria-live="polite">
-          {isSubmitting ? "One moment." : "We reply within one working day."}
-        </p>
+        <p className="text-sm text-muted">Opens a chat with your details filled in.</p>
       </div>
     </form>
   );

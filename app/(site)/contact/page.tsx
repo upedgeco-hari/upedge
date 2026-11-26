@@ -7,8 +7,8 @@ import { digits, hasNumber, site } from "@/data/site";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "Get a Free Quote",
-  description: "Tell UPEDGE about your project and get a clear next step, usually within one working day.",
+  title: "Contact Builders in Madurai, Free Quote",
+  description: `Get a free construction quote from ${site.name} in Suryanagar, Madurai. Call or WhatsApp ${site.phone}.`,
   path: "/contact",
 });
 
@@ -44,7 +44,7 @@ export default function ContactPage() {
                     <dt className="text-sm text-muted">{label}</dt>
                     <dd className="mt-0.5">
                       {href ? (
-                        <a href={href} className="link-line">
+                        <a href={href} className="link-line inline-block">
                           {value}
                         </a>
                       ) : (

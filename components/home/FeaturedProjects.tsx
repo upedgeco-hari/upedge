@@ -15,7 +15,7 @@ const layout = [
   { span: "lg:col-span-7", aspect: "aspect-[4/3]", offset: "lg:mt-12" },
 ];
 
-/** The signature section: four case studies. Hover a card to preview its construction stages. */
+/** The signature section: four projects. Hover a card to preview its other views. */
 export async function FeaturedProjects() {
   const all = await getAllProjects();
   const featured = featuredSlugs.map((s) => all.find((p) => p.slug === s)).filter((p): p is Project => !!p);
@@ -25,8 +25,8 @@ export async function FeaturedProjects() {
       <div className="container-x">
         <SectionHeader
           eyebrow="Selected work"
-          title="Projects, documented from before to final."
-          lead="Every build is photographed at each stage, so you can see how it was made as well as how it looks."
+          title="From the drawing board to the site."
+          lead="Recent UPEDGE homes, with 3D designs alongside photos from our sites. Open one to see more views."
         />
 
         <ul className="block-gap grid grid-cols-1 gap-x-8 gap-y-16 lg:grid-cols-12">

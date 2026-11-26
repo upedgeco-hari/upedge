@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useState } from "react";
-import { CloudImage } from "@/components/media/CloudImage";
+import { ServiceImage } from "@/components/services/ServiceImage";
 import { cn } from "@/lib/cn";
 import type { Service } from "@/lib/types";
 
@@ -66,7 +66,7 @@ export function ServicesList({ services }: { services: Service[] }) {
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.8, ease: [0.32, 0.72, 0, 1] }}
                 >
-                  <CloudImage media={current.image} sizes="(min-width: 1024px) 36vw, 0px" />
+                  <ServiceImage service={current} sizes="(min-width: 1024px) 36vw, 0px" />
                 </motion.div>
               </AnimatePresence>
             </div>

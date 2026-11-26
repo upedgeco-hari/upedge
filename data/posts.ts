@@ -1,10 +1,12 @@
 import type { Media, Post } from "@/lib/types";
 
-const cover = (slug: string, alt: string): Media => ({
+const cover = (slug: string, src: string, width: number, height: number, alt: string, position?: string): Media => ({
   publicId: `upedge/blog/${slug}`,
+  src,
+  width,
+  height,
   alt,
-  placeholder: true,
-  label: `Article cover, 16:9. Upload as upedge/blog/${slug}`,
+  position,
 });
 
 export const posts: Post[] = [
@@ -15,7 +17,7 @@ export const posts: Post[] = [
     date: "2026-03-12",
     readingMinutes: 5,
     category: "Planning",
-    cover: cover("home-construction-budget", "Floor plans and a calculator on a desk"),
+    cover: cover("home-construction-budget", "/images/site/framed-balcony-front.jpg", 2000, 1275, "3D design of a house front with a framed balcony"),
     body: [
       { type: "p", text: "A budget that only covers the building itself is a budget that will be exceeded. Most overruns come from items that were never on the list, not from the items that were." },
       { type: "h2", text: "Start with the whole project, not just the structure" },
@@ -35,7 +37,7 @@ export const posts: Post[] = [
     date: "2026-02-04",
     readingMinutes: 4,
     category: "Process",
-    cover: cover("before-construction", "A surveyor measuring a plot"),
+    cover: cover("before-construction", "/images/projects/white-frame-house/evening.jpg", 1920, 1080, "3D design of a white two-storey house at dusk"),
     body: [
       { type: "p", text: "The first weeks of a project can feel slow because nothing is visibly being built. In reality, this is when the largest risks are removed." },
       { type: "h2", text: "Understanding the site" },
@@ -54,7 +56,7 @@ export const posts: Post[] = [
     date: "2026-01-15",
     readingMinutes: 4,
     category: "Renovation",
-    cover: cover("renovate-or-rebuild", "An older house with scaffolding"),
+    cover: cover("renovate-or-rebuild", "/images/projects/brick-screen-house/day.jpg", 1600, 2000, "3D design of a narrow house with an exposed brick front", "50% 62%"),
     body: [
       { type: "p", text: "It is a common question, and the honest answer is that it depends on the building. A structural survey will tell you far more than any rule of thumb." },
       { type: "h2", text: "Start with the structure" },

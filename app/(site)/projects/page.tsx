@@ -6,8 +6,8 @@ import { getAllProjects } from "@/lib/projects";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "Projects",
-  description: "Residential, commercial, renovation and interior projects by UPEDGE, documented from before to final.",
+  title: "House Designs & Projects in Madurai",
+  description: "House construction and interior projects by UPEDGE in Madurai and Tamil Nadu: site photos and 3D house designs.",
   path: "/projects",
 });
 
@@ -17,7 +17,7 @@ export default async function ProjectsPage() {
     <>
       <PageHero
         title="Our projects"
-        lead="Each project is photographed at every stage. Open one to follow the build from the first day on site to handover."
+        lead="Photos from our sites and 3D house designs. Open a project to see it from more angles."
       />
       <section className="section-pb container-x">
         <ProjectGrid projects={projects} categories={categories} />

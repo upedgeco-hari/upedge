@@ -1,16 +1,29 @@
 import type { Media, Service } from "@/lib/types";
 
-const img = (slug: string, alt: string): Media => ({
+/** A service image served from public/. */
+const local = (slug: string, src: string, width: number, height: number, alt: string, position?: string): Media => ({
   publicId: `upedge/services/${slug}`,
+  src,
+  width,
+  height,
   alt,
-  placeholder: true,
-  label: `Service image, 4:3. Upload as upedge/services/${slug}`,
+  position,
 });
+
+/** Project management photos, shown in this order. 4:5 stills from @upedge_co reels. */
+const supervision: Media[] = (
+  [
+    ["pm-1", "UPEDGE founder Hariharan explaining a detail on site", "50% 22%"],
+    ["pm-3", "A UPEDGE team member checking steel stair work with the workers", "50% 25%"],
+    ["pm-4", "UPEDGE team members discussing work on site", "50% 22%"],
+  ] as const
+).map(([file, alt, position]) => local(`project-management/${file}`, `/images/site/${file}.jpg`, 1080, 1350, alt, position));
 
 export const services: Service[] = [
   {
     slug: "residential-construction",
     title: "Residential Construction",
+    searchTitle: "House Construction in Madurai",
     short: "Custom homes, villas and apartment buildings, built to your plans and your budget.",
     intro:
       "From a single-family home on your own plot to a multi-unit residential building, we take care of design coordination, approvals and construction under one accountable team.",
@@ -36,11 +49,12 @@ export const services: Service[] = [
       { q: "How is the cost fixed?", a: "You receive a written, itemised estimate. Changes after sign-off are priced and agreed in writing before they are carried out." },
     ],
     relatedCategory: "Residential",
-    image: img("residential-construction", "A newly built UPEDGE family home"),
+    image: local("residential-construction", "/images/projects/white-frame-house/evening.jpg", 1920, 1080, "3D design of a white two-storey UPEDGE family home at dusk"),
   },
   {
     slug: "commercial-construction",
     title: "Commercial Construction",
+    searchTitle: "Commercial Construction in Madurai",
     short: "Offices, retail and mixed-use buildings delivered with tight schedule control.",
     intro:
       "Commercial projects live and die by programme and coordination. We plan the sequence of trades carefully so your building is ready when your business needs it.",
@@ -66,40 +80,12 @@ export const services: Service[] = [
       { q: "Who handles statutory approvals?", a: "We prepare and track submissions with your consultants and keep you informed at each stage." },
     ],
     relatedCategory: "Commercial",
-    image: img("commercial-construction", "A UPEDGE commercial building under construction"),
-  },
-  {
-    slug: "renovation-and-remodelling",
-    title: "Renovation & Remodelling",
-    short: "Structural alterations, extensions and full refurbishments for existing buildings.",
-    intro:
-      "Working on an existing building asks for careful investigation before any demolition. We assess what is there, plan the works, and keep disruption as low as the job allows.",
-    icon: "hammer",
-    included: [
-      "Condition survey and structural assessment",
-      "Selective demolition and structural alterations",
-      "Extensions, additional floors and layout changes",
-      "Waterproofing, plumbing and electrical upgrades",
-      "Façade refresh and external works",
-      "Finishing and clean-up",
-    ],
-    process: [
-      { title: "Survey", text: "We inspect the structure and services so the scope reflects what is really behind the walls." },
-      { title: "Plan", text: "Works are sequenced to protect what stays and to limit disruption to occupants." },
-      { title: "Execute", text: "Strip-out, alterations and rebuild with regular photo updates." },
-      { title: "Finish", text: "Finishes, snagging and a clean handover." },
-    ],
-    faqs: [
-      { q: "Can we live in the property during the work?", a: "Sometimes. It depends on scope. We will tell you honestly whether phased works or a temporary move is the better route." },
-      { q: "Will you check the structure before adding a floor?", a: "Always. A structural assessment comes first and informs both the design and the estimate." },
-      { q: "What if you find something unexpected?", a: "We stop, document it, explain the options and agree the way forward with you before continuing." },
-    ],
-    relatedCategory: "Renovation",
-    image: img("renovation-and-remodelling", "A renovated UPEDGE project, before and after"),
+    image: local("commercial-construction", "/images/site/salon-interior.jpg", 1080, 845, "A salon interior in Madurai fitted out by UPEDGE", "50% 70%"),
   },
   {
     slug: "interiors-and-fit-outs",
     title: "Interiors & Fit-outs",
+    searchTitle: "Interior Design & Fit-outs in Madurai",
     short: "Considered interiors for homes, offices and retail, from joinery to lighting.",
     intro:
       "Interiors are where a building is experienced every day. We design, detail and deliver fit-outs with the same discipline we bring to structure.",
@@ -124,11 +110,12 @@ export const services: Service[] = [
       { q: "Do you handle commercial fit-outs?", a: "Yes, including offices, showrooms, clinics and hospitality spaces." },
     ],
     relatedCategory: "Interiors",
-    image: img("interiors-and-fit-outs", "A finished UPEDGE interior"),
+    image: local("interiors-and-fit-outs", "/images/site/modular-kitchen.jpg", 720, 563, "A sage green modular kitchen with timber framing and under-cabinet lighting", "50% 30%"),
   },
   {
     slug: "architectural-planning",
     title: "Architectural Planning",
+    searchTitle: "Architectural Planning & House Design in Madurai",
     short: "Concept design, drawings and 3D visuals that turn a brief into a buildable plan.",
     intro:
       "A good plan saves money long before the first brick. We develop layouts, drawings and visuals that you can understand, and that a site team can build from.",
@@ -153,11 +140,12 @@ export const services: Service[] = [
       { q: "Do the drawings include approvals?", a: "We prepare the drawing sets required for statutory submissions and support the process." },
     ],
     relatedCategory: "Residential",
-    image: img("architectural-planning", "Architectural drawings and a 3D model on a desk"),
+    image: local("architectural-planning", "/images/site/framed-balcony-front.jpg", 2000, 1275, "3D design of a house front with a framed balcony and timber roof soffit"),
   },
   {
     slug: "project-management",
     title: "Project Management",
+    searchTitle: "Construction Project Management in Madurai",
     short: "Independent supervision, budgeting and quality control for builds you manage yourself.",
     intro:
       "If you have your own contractors or are building at a distance, we act as your site-side team: planning, supervising, reporting and protecting your interests.",
@@ -182,7 +170,38 @@ export const services: Service[] = [
       { q: "How do you charge?", a: "Typically a fixed fee or a percentage of project value, agreed up front." },
     ],
     relatedCategory: "Commercial",
-    image: img("project-management", "A UPEDGE site manager reviewing progress"),
+    image: supervision[0],
+    gallery: supervision,
+  },
+  {
+    slug: "landscaping",
+    title: "Landscaping",
+    searchTitle: "Landscaping in Madurai",
+    short: "Front gardens, planters, paving and outdoor lighting designed together with the house.",
+    intro:
+      "The outdoor space is part of the home. We plan planting, paving, boundary and lighting alongside the architecture, so the house and its surroundings read as one design.",
+    icon: "plant",
+    included: [
+      "Site levels, drainage and layout planning",
+      "Planting plan suited to sun, water and upkeep",
+      "Driveways, pathways and paving",
+      "Planters, compound walls and gates",
+      "Outdoor and facade lighting",
+      "Care guidance at handover",
+    ],
+    process: [
+      { title: "Site study", text: "We look at sun, soil, drainage and how you want to use the outdoor space." },
+      { title: "Plan", text: "Layout, planting and materials are shared as drawings and visuals, with an estimate." },
+      { title: "Install", text: "Hard works come first, followed by services, planting and lighting." },
+      { title: "Handover", text: "A walkthrough with simple care instructions for what has been planted." },
+    ],
+    faqs: [
+      { q: "Can landscaping be planned with a new house?", a: "Yes, and it helps. Levels, drainage and wiring are easier to resolve before construction finishes." },
+      { q: "Do you take up landscaping for an existing home?", a: "Tell us about the space. We start with a site visit and confirm what is practical." },
+      { q: "What if I want low-maintenance planting?", a: "Say so at the start. Plant choice and irrigation are planned around the care you can give." },
+    ],
+    relatedCategory: "Residential",
+    image: local("landscaping", "/images/site/front-planting.jpg", 1856, 1037, "3D design of tropical planting and paving in front of a UPEDGE house", "50% 55%"),
   },
 ];
 

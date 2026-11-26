@@ -8,18 +8,19 @@ import type { Testimonial } from "@/lib/types";
 const round =
   "grid size-12 place-items-center rounded-full shadow-[inset_0_0_0_1px_var(--line-strong)] transition-[background-color,color,transform,box-shadow] duration-[var(--dur-3)] ease-smooth hover:bg-ink hover:text-paper hover:shadow-[inset_0_0_0_1px_var(--ink),var(--elev-3)] active:scale-95";
 
-/** One large quote at a time. Quotes are capped at three lines by the data, not by CSS tricks. */
+/** One large quote at a time. Quotes are capped at three lines by the data, not by CSS tricks. Hidden when empty. */
 export function Testimonials({ items }: { items: Testimonial[] }) {
   const [i, setI] = useState(0);
   const reduce = useReducedMotion();
   const t = items[i];
   const go = (d: number) => setI((i + d + items.length) % items.length);
+  if (!t) return null;
 
   return (
-    <section className="section-y edge-top" aria-roledescription="carousel" aria-label="Client testimonials">
+    <section className="section-y edge-top" aria-roledescription="carousel" aria-label="Comments from Instagram">
       <div className="container-x">
         <div className="flex flex-wrap items-baseline justify-between gap-4">
-          <h2 className="display-3 max-w-3xl text-balance">What clients say</h2>
+          <h2 className="display-3 max-w-3xl text-balance">What people say on Instagram</h2>
           <p className="index-num tabular text-muted">
             {String(i + 1).padStart(2, "0")}
             <span className="mx-1.5 text-line-strong">/</span>
@@ -52,10 +53,21 @@ export function Testimonials({ items }: { items: Testimonial[] }) {
                 <figcaption className="mt-8 flex items-center gap-4 text-muted">
                   <span className="h-px w-9 shrink-0 bg-accent" aria-hidden="true" />
                   <span>
-                    <span className="font-medium text-ink">{t.name}</span>
-                    <br />
-                    {t.role}
-                    {t.project ? `, ${t.project}` : ""}
+                    {t.href ? (
+                      <a href={t.href} target="_blank" rel="noopener noreferrer" className="link-line inline-block font-medium text-ink">
+                        {t.name}
+                        <span className="sr-only"> (opens the post in a new tab)</span>
+                      </a>
+                    ) : (
+                      <span className="font-medium text-ink">{t.name}</span>
+                    )}
+                    {t.role && (
+                      <>
+                        <br />
+                        {t.role}
+                        {t.project ? `, ${t.project}` : ""}
+                      </>
+                    )}
                   </span>
                 </figcaption>
               </motion.figure>
@@ -63,10 +75,10 @@ export function Testimonials({ items }: { items: Testimonial[] }) {
           </div>
 
           <div className="flex items-end gap-3 lg:col-span-3 lg:col-start-10 lg:justify-end">
-            <button type="button" className={round} aria-label="Previous testimonial" onClick={() => go(-1)}>
+            <button type="button" className={round} aria-label="Previous comment" onClick={() => go(-1)}>
               <ArrowLeft size={20} weight="light" />
             </button>
-            <button type="button" className={round} aria-label="Next testimonial" onClick={() => go(1)}>
+            <button type="button" className={round} aria-label="Next comment" onClick={() => go(1)}>
               <ArrowRight size={20} weight="light" />
             </button>
           </div>

@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Check } from "@phosphor-icons/react/dist/ssr";
 import { CtaBanner } from "@/components/home/CtaBanner";
-import { CloudImage } from "@/components/media/CloudImage";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ServiceIcon } from "@/components/services/ServiceIcon";
+import { ServiceImage } from "@/components/services/ServiceImage";
 import { Accordion } from "@/components/ui/Accordion";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/ui/PageHero";
@@ -16,6 +16,7 @@ import { getService, services } from "@/data/services";
 import { cta, site } from "@/data/site";
 import { quoteHref, serviceEnquiry } from "@/lib/enquiry";
 import { getAllProjects } from "@/lib/projects";
+import { cn } from "@/lib/cn";
 import { absoluteUrl, breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -28,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const s = getService(slug);
   if (!s) return {};
-  return buildMetadata({ title: s.title, description: s.short, path: `/services/${s.slug}` });
+  return buildMetadata({ title: s.searchTitle, description: `${s.short} Serving ${site.city} and Tamil Nadu.`, path: `/services/${s.slug}` });
 }
 
 export default async function ServicePage({ params }: Props) {
@@ -37,6 +38,7 @@ export default async function ServicePage({ params }: Props) {
   if (!service) notFound();
 
   const enquiry = serviceEnquiry(service.slug);
+  const portrait = (service.image.height ?? 0) > (service.image.width ?? 0);
   const all = await getAllProjects();
   const related = all.filter((p) => p.category === service.relatedCategory || p.services?.includes(service.slug)).slice(0, 2);
 
@@ -46,9 +48,9 @@ export default async function ServicePage({ params }: Props) {
 
       <section className="section-pb container-x">
         <Rise>
-          <div className="bezel">
-            <div className="relative aspect-[16/9] overflow-hidden rounded-inner sm:aspect-[21/9]">
-              <CloudImage media={service.image} sizes="(min-width: 1400px) 1300px, 100vw" priority />
+          <div className={cn("bezel", portrait && "mx-auto max-w-xl short:max-w-xs")}>
+            <div className={cn("relative overflow-hidden rounded-inner", portrait ? "aspect-[4/5]" : "aspect-[16/9] sm:aspect-[21/9]")}>
+              <ServiceImage service={service} sizes={portrait ? "(min-width: 640px) 576px, 100vw" : "(min-width: 1400px) 1300px, 100vw"} priority />
             </div>
           </div>
         </Rise>

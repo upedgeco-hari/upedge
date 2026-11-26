@@ -8,8 +8,7 @@ import { BackLink } from "@/components/ui/BackLink";
 import { Reveal } from "@/components/ui/Reveal";
 import { getPost, posts } from "@/data/posts";
 import { site } from "@/data/site";
-import { cloudinaryReady, imageUrl, ogImageUrl } from "@/lib/cloudinary";
-import { absoluteUrl, breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
+import { absoluteUrl, breadcrumbJsonLd, buildMetadata, mediaUrl, shareImage } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -21,12 +20,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const p = getPost(slug);
   if (!p) return {};
-  const live = !p.cover.placeholder && cloudinaryReady;
   return buildMetadata({
     title: p.title,
     description: p.excerpt,
     path: `/blog/${p.slug}`,
-    image: live ? ogImageUrl(p.cover.publicId) : undefined,
+    image: shareImage(p.cover),
     type: "article",
   });
 }
@@ -38,7 +36,7 @@ export default async function PostPage({ params }: Props) {
   const post = getPost(slug);
   if (!post) notFound();
   const more = posts.filter((p) => p.slug !== post.slug).slice(0, 2);
-  const live = !post.cover.placeholder && cloudinaryReady;
+  const coverUrl = mediaUrl(post.cover);
 
   return (
     <>
@@ -116,7 +114,7 @@ export default async function PostPage({ params }: Props) {
             mainEntityOfPage: absoluteUrl(`/blog/${post.slug}`),
             author: { "@type": "Organization", name: site.name },
             publisher: { "@type": "Organization", name: site.name, logo: { "@type": "ImageObject", url: absoluteUrl("/brand/upedge-wordmark.svg") } },
-            ...(live ? { image: imageUrl(post.cover.publicId) } : {}),
+            ...(coverUrl ? { image: coverUrl } : {}),
           },
         ]}
       />

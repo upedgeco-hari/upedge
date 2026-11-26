@@ -5,11 +5,17 @@ import type { Media } from "@/lib/types";
  */
 export const site = {
   name: "UPEDGE",
-  legalName: "[LEGAL COMPANY NAME]",
   tagline: "A pinnacle of premium construction",
+  /** The name used on Instagram, so a search for it finds the site too. */
+  alternateName: "UPEDGE Construction",
+  founder: "Hariharan",
+  foundingYear: "2020",
   description:
-    "UPEDGE designs and builds residential, commercial and renovation projects, managed from first sketch to final handover.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+    "UPEDGE is a construction company in Madurai that designs and builds homes, commercial spaces and interiors, with projects across Tamil Nadu.",
+  /** NEXT_PUBLIC_SITE_URL wins; on Vercel the production domain is used when it is not set. */
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000"),
   email: "upedge.co@gmail.com",
   phone: "+91 90474 44614",
   whatsapp: "+91 90474 44614",
@@ -62,7 +68,7 @@ export const stats: { value: number | null; suffix?: string; label: string; plai
   { value: 2020, suffix: "", label: "Established", plain: true },
 ];
 
-/** Site-level images. Set placeholder: false once the real file is on Cloudinary. */
+/** Site-level images. A `src` is a file in public/; placeholders still need a photo. */
 export const media = {
   hero: {
     publicId: "upedge/site/hero",
@@ -72,17 +78,43 @@ export const media = {
   },
   about: {
     publicId: "upedge/site/about-main",
-    alt: "The UPEDGE team reviewing plans on site",
-    placeholder: true,
-    label: "About image, portrait 4:5. Upload as upedge/site/about-main",
+    src: "/images/projects/green-veil-house/day-front.jpg",
+    width: 1611,
+    height: 2000,
+    position: "50% 66%",
+    alt: "3D design of a UPEDGE house with grey plaster, a steel balcony and a terracotta tile wall",
   },
   aboutSecondary: {
     publicId: "upedge/site/about-detail",
-    alt: "Close-up of finished masonry and joinery",
-    placeholder: true,
-    label: "Detail image, square. Upload as upedge/site/about-detail",
+    src: "/images/site/terracotta-screen-detail.jpg",
+    width: 768,
+    height: 768,
+    alt: "Close-up of a terracotta block screen on a UPEDGE house design",
   },
 } satisfies Record<string, Media>;
+
+/** Ceremonies posted on @upedge_co. Photos are in public/images/families/. An empty list hides the section. */
+export const familyMoments: { image: string; event: "Bhoomi pooja" | "Housewarming"; place?: string }[] = [
+  { image: "pooja-kamuthi", event: "Bhoomi pooja", place: "Kamuthi, Ramanathapuram" },
+  { image: "housewarming-welcome", event: "Housewarming" },
+  { image: "pooja-tvs-nagar", event: "Bhoomi pooja", place: "TVS Nagar, Madurai" },
+  { image: "housewarming-family", event: "Housewarming" },
+  { image: "pooja-kadachanendal", event: "Bhoomi pooja", place: "Kadachanendal, Madurai" },
+  { image: "housewarming-doorway", event: "Housewarming" },
+  { image: "pooja-alathur", event: "Bhoomi pooja", place: "Alathur" },
+  { image: "housewarming-verandah", event: "Housewarming" },
+];
+
+/**
+ * Captions as posted on @upedge_co, each with a still from its reel and a link to it.
+ * To play a reel on the site, save your video as public/videos/{image}.mp4 and rebuild.
+ */
+export const instagramPosts = [
+  { image: "work-in-progress", caption: "Raising structures, building legacies. Work in progress.", href: "https://www.instagram.com/reel/Df7LHeQIxkC/" },
+  { image: "every-brick", caption: "Every brick has a purpose. Every detail is designed. Every corner is crafted.", href: "https://www.instagram.com/reel/DavIRYZNPdN/" },
+  { image: "perfect-finish", caption: "Behind every beautiful space is a perfect finish.", href: "https://www.instagram.com/reel/DbF81_DAIKW/" },
+  { image: "todays-dust", caption: "Today's dust, tomorrow's dream.", href: "https://www.instagram.com/reel/DcnrI5fABqv/" },
+];
 
 /** Places where UPEDGE has completed projects. Madurai is the home office. */
 export const serviceAreas = {
@@ -139,28 +171,43 @@ export const values = [
   { title: "Built for the long run", text: "Decisions are made for how a building performs in ten years, not just on handover day." },
 ] as const;
 
-export const team: { name: string; role: string; photo: Media }[] = [1, 2, 3, 4].map((n) => ({
-  name: "[NAME]",
-  role: "[ROLE]",
-  photo: {
-    publicId: `upedge/team/0${n}`,
-    alt: "[NAME], [ROLE]",
-    placeholder: true,
-    label: `Team portrait, 4:5. Upload as upedge/team/0${n}`,
+/** Milestones from the company's own records and Instagram posts. Photos are in public/images/timeline/. */
+export const companyTimeline: { year: string; title: string; text: string; photo?: { src: string; alt: string } }[] = [
+  { year: "2020", title: "UPEDGE is established", text: "The company begins work from Madurai." },
+  {
+    year: "Jan 2025",
+    title: "Two new beginnings",
+    text: "Bhoomi poojas mark the start of new homes at TVS Nagar, Madurai and Kamuthi, Ramanathapuram.",
+    photo: { src: "/images/timeline/tvs-nagar.jpg", alt: "Bhoomi pooja at TVS Nagar, Madurai" },
   },
-}));
-
-export const certifications = [
-  { title: "[CERTIFICATION OR REGISTRATION]", body: "[Issuing body and registration number]" },
-  { title: "[CERTIFICATION OR REGISTRATION]", body: "[Issuing body and registration number]" },
-  { title: "[CERTIFICATION OR REGISTRATION]", body: "[Issuing body and registration number]" },
+  {
+    year: "Jul 2025",
+    title: "Ground broken at Kadachanendal",
+    text: "Work begins on a residential building at Kadachanendal, Madurai.",
+    photo: { src: "/images/timeline/kadachanendal.jpg", alt: "Bhoomi pooja at Kadachanendal, Madurai" },
+  },
+  {
+    year: "Jul 2025",
+    title: "Recognised in Coimbatore",
+    text: "Founder Hariharan receives an award at a ceremony in Coimbatore.",
+    photo: { src: "/images/timeline/award.jpg", alt: "Hariharan holding an award at the ceremony in Coimbatore" },
+  },
+  {
+    year: "Jan 2026",
+    title: "A new project at Alathur",
+    text: "A bhoomi pooja marks the start of the next build.",
+    photo: { src: "/images/timeline/alathur.jpg", alt: "Bhoomi pooja at Alathur" },
+  },
 ];
 
-export const companyTimeline = [
-  { year: "[YEAR]", title: "[Founding milestone]", text: "[One sentence about how UPEDGE started.]" },
-  { year: "[YEAR]", title: "[Growth milestone]", text: "[One sentence, such as the first commercial project or a team expansion.]" },
-  { year: "[YEAR]", title: "[Capability milestone]", text: "[One sentence, such as launching in-house design or project management.]" },
-  { year: "[YEAR]", title: "[Recent milestone]", text: "[One sentence about the most recent chapter.]" },
+/** Stills from site work posted on @upedge_co, in public/images/sites/. */
+export const siteWork = [
+  { image: "marking", label: "Site marking" },
+  { image: "reinforcement", label: "Slab reinforcement" },
+  { image: "steel", label: "Steel fabrication" },
+  { image: "plastering", label: "Plastering" },
+  { image: "carpentry", label: "Carpentry" },
+  { image: "door-fitting", label: "Door fitting" },
 ];
 
 /*

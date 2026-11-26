@@ -16,10 +16,10 @@ import { Rise } from "@/components/ui/Rise";
 import { projects as staticProjects } from "@/data/projects";
 import { getService } from "@/data/services";
 import { cta, site } from "@/data/site";
-import { cloudinaryReady, imageUrl, isLive, ogImageUrl } from "@/lib/cloudinary";
+import { isLive } from "@/lib/cloudinary";
 import { projectEnquiry, quoteHref } from "@/lib/enquiry";
 import { getProjectBySlug, getRelated } from "@/lib/projects";
-import { absoluteUrl, breadcrumbJsonLd, buildMetadata } from "@/lib/seo";
+import { absoluteUrl, breadcrumbJsonLd, buildMetadata, mediaUrl, shareImage } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -31,12 +31,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const p = await getProjectBySlug(slug);
   if (!p) return {};
-  const live = p.status === "live" && cloudinaryReady;
+  const what = p.category === "Interiors" ? "interior project" : p.kind === "design" ? "3D house design" : "house construction";
   return buildMetadata({
-    title: `${p.title}, ${p.category} project`,
-    description: p.summary,
+    title: `${p.title}, ${what}${p.location ? ` in ${p.location}` : ""}`,
+    description: `${p.summary} By ${site.name}, builders in ${site.city}.`,
     path: `/projects/${p.slug}`,
-    image: live ? ogImageUrl(p.cover.publicId) : undefined,
+    image: shareImage(p.cover),
     type: "article",
   });
 }
@@ -47,39 +47,60 @@ export default async function ProjectPage({ params }: Props) {
   if (!project) notFound();
   const related = await getRelated(slug);
   const used = (project.services ?? []).map(getService).filter((s) => !!s);
-  const live = project.status === "live" && cloudinaryReady;
+  const design = project.kind === "design";
+  // Portrait covers sit beside the title: stretched full-bleed they would lose most of the house.
+  const portrait = (project.cover.height ?? 0) > (project.cover.width ?? 0);
+  const photos = project.images.filter((img) => mediaUrl(img));
 
-  const facts: [string, string][] = [
-    ["Location", project.location],
-    ["Built-up area", project.area ? `${project.area.toLocaleString("en-IN")} sq. ft.` : "[AREA] sq. ft."],
-    ["Duration", project.duration],
-    ["Year", project.year ? String(project.year) : "[YEAR]"],
-    ["Client", project.clientType],
+  // Only facts that are actually known are shown.
+  const facts = [
     ["Category", project.category],
-  ];
+    ["Shown as", design ? "3D design visualisation" : "Site photos"],
+    ["Location", project.location],
+    ["Built-up area", project.area ? `${project.area.toLocaleString("en-IN")} sq. ft.` : undefined],
+    ["Duration", project.duration],
+    ["Year", project.year ? String(project.year) : undefined],
+    ["Client", project.clientType],
+  ].filter((f): f is [string, string] => !!f[1]);
+
+  const heading = (
+    <>
+      <Rise>
+        <h1 className="display-1 max-w-4xl text-balance">{project.title}</h1>
+      </Rise>
+      <Rise delay={0.12} className="mt-6">
+        <p className="lead text-on-inverse/90!">{project.summary}</p>
+      </Rise>
+    </>
+  );
 
   return (
     <>
       {/* Hero */}
-      <section className="relative isolate flex min-h-[88dvh] items-end overflow-hidden bg-inverse text-on-inverse" data-inverse>
-        <Parallax distance={100} scale={1.12} disabled={!isLive(project.cover)}>
-          <CloudImage media={project.cover} sizes="100vw" priority placeholderTop />
-        </Parallax>
-        <div className="absolute inset-0 bg-gradient-to-t from-inverse/90 via-inverse/30 to-inverse/55" aria-hidden="true" />
-        <div className="container-x relative pb-12 pt-40 sm:pb-16">
-          <Rise>
-            <h1 className="display-1 max-w-4xl text-balance">{project.title}</h1>
-          </Rise>
-          <Rise delay={0.12} className="mt-6">
-            <p className="lead text-on-inverse/90!">{project.summary}</p>
-          </Rise>
-        </div>
-      </section>
+      {portrait ? (
+        <section className="bg-inverse text-on-inverse" data-inverse>
+          <div className="container-x grid items-center gap-10 pb-12 pt-28 sm:pb-16 short:grid-cols-2 short:pb-8 short:pt-20 lg:min-h-[88dvh] lg:grid-cols-2 lg:gap-16 lg:pt-32">
+            <div>{heading}</div>
+            <Rise delay={0.18} className="mx-auto w-full max-w-md short:max-w-[min(100%,56dvh)] lg:max-w-[min(100%,56dvh)]">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-card">
+                <CloudImage media={project.cover} sizes="(min-width: 1024px) 40vw, (min-width: 480px) 448px, 100vw" priority />
+              </div>
+            </Rise>
+          </div>
+        </section>
+      ) : (
+        <section className="relative isolate flex min-h-[88dvh] items-end overflow-hidden bg-inverse text-on-inverse" data-inverse>
+          <Parallax distance={100} scale={1.12} disabled={!isLive(project.cover)}>
+            <CloudImage media={project.cover} sizes="100vw" priority placeholderTop />
+          </Parallax>
+          <div className="absolute inset-0 bg-gradient-to-t from-inverse/90 via-inverse/30 to-inverse/55" aria-hidden="true" />
+          <div className="container-x relative pb-12 pt-40 sm:pb-16">{heading}</div>
+        </section>
+      )}
 
       {project.status === "placeholder" && (
         <p className="bg-accent-tint px-[var(--gutter)] py-3 text-center text-sm text-ink">
-          Sample project. Replace the details in <span className="font-medium">data/projects.ts</span> and the images in Cloudinary under{" "}
-          <span className="font-medium">upedge/projects/{project.slug}/</span>.
+          Sample project. Replace the details and images in <span className="font-medium">data/projects.ts</span>.
         </p>
       )}
 
@@ -102,7 +123,7 @@ export default async function ProjectPage({ params }: Props) {
       <section className="section-y container-x grid gap-12 lg:grid-cols-12 lg:gap-8">
         <div className="space-y-6 lg:col-span-7">
           <Reveal>
-            <h2 className="display-3 text-balance">The brief and the build</h2>
+            <h2 className="display-3 text-balance">{design ? "The design" : "The brief and the build"}</h2>
           </Reveal>
           {project.story.map((para, i) => (
             <Reveal key={i} delay={0.06 * (i + 1)}>
@@ -112,7 +133,7 @@ export default async function ProjectPage({ params }: Props) {
         </div>
         {used.length > 0 && (
           <Reveal className="lg:col-span-4 lg:col-start-9">
-            <h2 className="text-sm text-muted">Services used</h2>
+            <h2 className="text-sm text-muted">{design ? "Related services" : "Services used"}</h2>
             <ul className="mt-4 divide-y divide-line border-y border-line">
               {used.map((s) => (
                 <li key={s.slug}>
@@ -127,19 +148,15 @@ export default async function ProjectPage({ params }: Props) {
         )}
       </section>
 
-      {/* Construction story (scroll-driven, with browse mode) */}
+      {/* Image story (scroll-driven, with browse mode) */}
       <ProjectStory project={project} />
 
-      {/* Before / after */}
-      {project.beforeAfter && (
+      {/* Comparison slider */}
+      {project.comparison && (
         <section className="section-y container-x">
-          <SectionHeader
-            eyebrow="Before and after"
-            title="The transformation"
-            lead="Drag the handle to compare the site before work began with the finished result."
-          />
+          <SectionHeader eyebrow={project.comparison.eyebrow} title={project.comparison.title} lead={project.comparison.lead} />
           <Reveal variant="media" delay={0.1} className="block-gap">
-            <BeforeAfter before={project.beforeAfter.before} after={project.beforeAfter.after} />
+            <BeforeAfter before={project.comparison.before} after={project.comparison.after} labels={project.comparison.labels} />
           </Reveal>
         </section>
       )}
@@ -188,18 +205,16 @@ export default async function ProjectPage({ params }: Props) {
             description: project.summary,
             url: absoluteUrl(`/projects/${project.slug}`),
             genre: project.category,
-            locationCreated: project.location.includes("[") ? undefined : project.location,
+            locationCreated: project.location,
             creator: { "@type": "Organization", name: site.name, url: site.url },
-            ...(live
-              ? {
-                  image: project.images.map((img) => ({
-                    "@type": "ImageObject",
-                    contentUrl: imageUrl(img.publicId),
-                    name: `${project.title}: ${img.stage}`,
-                    caption: img.caption ?? img.alt,
-                  })),
-                }
-              : {}),
+            image: photos.length
+              ? photos.map((img) => ({
+                  "@type": "ImageObject",
+                  contentUrl: mediaUrl(img),
+                  name: `${project.title}: ${img.stage}`,
+                  caption: img.caption ?? img.alt,
+                }))
+              : undefined,
           },
         ]}
       />

@@ -7,7 +7,7 @@ import { posts } from "@/data/posts";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "Blog",
+  title: "House Construction Tips & Guides",
   description: "Practical advice on planning, budgeting and building, from the UPEDGE team.",
   path: "/blog",
 });
