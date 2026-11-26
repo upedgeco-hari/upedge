@@ -19,7 +19,7 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: { default: `${site.name} | ${site.tagline}`, template: `%s | ${site.name}` },
+  title: { default: "Upedge Construction Company", template: `%s | ${site.name}` },
   description: site.description,
   applicationName: site.name,
   openGraph: { siteName: site.name, type: "website", locale: "en_IN" },

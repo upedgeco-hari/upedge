@@ -21,6 +21,14 @@ type Props = {
 };
 
 /**
+ * `sizes` for a photo shown whole (fit="contain") in a screen-high frame: a portrait one
+ * only fills the height, so it needs far fewer pixels than the full screen width.
+ */
+export function containSizes({ width, height }: Media) {
+  return width && height ? `min(100vw, ${Math.ceil((width / height) * 100)}vh)` : "100vw";
+}
+
+/**
  * Every content image on the site goes through this component. Files in public/ (media.src)
  * are optimised by next/image; everything else comes from Cloudinary (f_auto + q_auto,
  * blur-up). Both get a responsive srcset and lazy loading.

@@ -4,7 +4,7 @@ import { ArrowLeft, ArrowRight, MagnifyingGlassMinus, MagnifyingGlassPlus, X } f
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { setScrollLocked } from "@/lib/scroll-lock";
-import { CloudImage } from "@/components/media/CloudImage";
+import { CloudImage, containSizes } from "@/components/media/CloudImage";
 import { cn } from "@/lib/cn";
 import type { ProjectImage } from "@/lib/types";
 
@@ -140,7 +140,7 @@ export function Lightbox({ images, index, onClose, onIndex }: Props) {
                 dragElastic={0.1}
               >
                 <div className="absolute inset-0">
-                  <CloudImage media={img} sizes="100vw" fit="contain" />
+                  <CloudImage media={img} sizes={containSizes(img)} fit="contain" />
                 </div>
               </motion.div>
             </motion.div>

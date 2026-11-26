@@ -140,7 +140,7 @@ export const services: Service[] = [
       { q: "Do the drawings include approvals?", a: "We prepare the drawing sets required for statutory submissions and support the process." },
     ],
     relatedCategory: "Residential",
-    image: local("architectural-planning", "/images/site/framed-balcony-front.jpg", 2000, 1275, "3D design of a house front with a framed balcony and timber roof soffit"),
+    image: local("architectural-planning", "/images/site/framed-balcony-front.jpg", 1920, 1224, "3D design of a house front with a framed balcony and timber roof soffit"),
   },
   {
     slug: "project-management",
