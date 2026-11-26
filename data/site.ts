@@ -79,8 +79,8 @@ export const media = {
   about: {
     publicId: "upedge/site/about-main",
     src: "/images/projects/green-veil-house/day-front.jpg",
-    width: 1611,
-    height: 2000,
+    width: 1450,
+    height: 1800,
     position: "50% 66%",
     alt: "3D design of a UPEDGE house with grey plaster, a steel balcony and a terracotta tile wall",
   },

@@ -17,7 +17,7 @@ export const posts: Post[] = [
     date: "2026-03-12",
     readingMinutes: 5,
     category: "Planning",
-    cover: cover("home-construction-budget", "/images/site/framed-balcony-front.jpg", 2000, 1275, "3D design of a house front with a framed balcony"),
+    cover: cover("home-construction-budget", "/images/site/framed-balcony-front.jpg", 1920, 1224, "3D design of a house front with a framed balcony"),
     body: [
       { type: "p", text: "A budget that only covers the building itself is a budget that will be exceeded. Most overruns come from items that were never on the list, not from the items that were." },
       { type: "h2", text: "Start with the whole project, not just the structure" },
@@ -56,7 +56,7 @@ export const posts: Post[] = [
     date: "2026-01-15",
     readingMinutes: 4,
     category: "Renovation",
-    cover: cover("renovate-or-rebuild", "/images/projects/brick-screen-house/day.jpg", 1600, 2000, "3D design of a narrow house with an exposed brick front", "50% 62%"),
+    cover: cover("renovate-or-rebuild", "/images/projects/brick-screen-house/day.jpg", 1440, 1800, "3D design of a narrow house with an exposed brick front", "50% 62%"),
     body: [
       { type: "p", text: "It is a common question, and the honest answer is that it depends on the building. A structural survey will tell you far more than any rule of thumb." },
       { type: "h2", text: "Start with the structure" },

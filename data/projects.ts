@@ -54,14 +54,14 @@ function project({ shots, coverFile, compare, ...rest }: Seed): Project {
   return { ...rest, status: "live", images, cover, comparison };
 }
 
-const portrait = [1600, 2000] as const;
+const portrait = [1440, 1800] as const;
 /** Stills from reels. */
 const still = [720, 1280] as const;
 const wide = [1280, 720] as const;
 /** Instagram carousel images. */
 const feed = [1440, 1800] as const;
 const tall = [893, 1600] as const;
-const corner = [1611, 2000] as const;
+const corner = [1450, 1800] as const;
 
 const dayAndNight = {
   labels: ["Day", "Night"] as [string, string],
@@ -424,8 +424,8 @@ export const projects: Project[] = [
     services: ["residential-construction", "architectural-planning"],
     coverFile: "evening-front",
     shots: [
-      { file: "evening-front", stage: "Front", caption: "The front elevation in the evening.", size: [1500, 2000], position: "50% 55%" },
-      { file: "evening-corner", stage: "Corner", caption: "A wider view from the corner at sunset.", size: [1500, 2000], position: "50% 55%" },
+      { file: "evening-front", stage: "Front", caption: "The front elevation in the evening.", size: [1350, 1800], position: "50% 55%" },
+      { file: "evening-corner", stage: "Corner", caption: "A wider view from the corner at sunset.", size: [1350, 1800], position: "50% 55%" },
     ],
   }),
   project({

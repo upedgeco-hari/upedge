@@ -3,7 +3,7 @@
 import { ArrowLeft, ArrowRight, ArrowsOut } from "@phosphor-icons/react/dist/ssr";
 import { AnimatePresence, motion, useInView, useMotionValueEvent, useReducedMotion, useScroll } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CloudImage } from "@/components/media/CloudImage";
+import { CloudImage, containSizes } from "@/components/media/CloudImage";
 import { Lightbox } from "@/components/projects/Lightbox";
 import { cn } from "@/lib/cn";
 import type { Project } from "@/lib/types";
@@ -109,7 +109,7 @@ export function ProjectStory({ project }: { project: Project }) {
                 transition={{ duration: reduce ? 0 : 1, ease }}
                 aria-hidden={i !== active}
               >
-                <CloudImage media={img} sizes="100vw" priority={i === 0} fit={img.src ? "contain" : "cover"} />
+                <CloudImage media={img} sizes={img.src ? containSizes(img) : "100vw"} fit={img.src ? "contain" : "cover"} />
               </motion.div>
             ) : null,
           )}
