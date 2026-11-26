@@ -46,14 +46,14 @@ export function Hero() {
             <span className="eyebrow text-on-inverse">Hariharan</span>
           </span>
           <span className="eyebrow text-on-inverse-muted">
-            {site.city}, {site.region}
+            Construction company in {site.city}
           </span>
         </Rise>
       </div>
 
       {/* Portrait: contained card below lg (sized by screen height, so the buttons stay in view),
           positioned cutout beside the headline from lg up and on a sideways phone. */}
-      <div className="relative z-10 order-2 mx-auto mt-6 aspect-[2/3] w-[min(70%,28dvh)] max-w-64 overflow-hidden rounded-card sm:max-w-xs md:max-w-sm lg:absolute lg:inset-y-0 lg:right-[max(2%,calc((100%-var(--container))/2))] lg:order-0 lg:mx-0 lg:mt-0 lg:mb-0 lg:aspect-auto lg:w-[38%] lg:max-w-none lg:rounded-none xl:w-[36%] xl:max-w-[44rem] short:absolute short:inset-y-0 short:right-[6%] short:mx-0 short:mt-0 short:aspect-auto short:w-[32%] short:max-w-none short:rounded-none">
+      <div className="relative z-10 order-2 mx-auto mt-6 aspect-[2/3] w-[min(70%,27dvh)] max-w-64 overflow-hidden rounded-card sm:max-w-xs md:max-w-sm lg:absolute lg:inset-y-0 lg:right-[max(2%,calc((100%-var(--container))/2))] lg:order-0 lg:mx-0 lg:mt-0 lg:mb-0 lg:aspect-auto lg:w-[38%] lg:max-w-none lg:rounded-none xl:w-[36%] xl:max-w-[44rem] short:absolute short:inset-y-0 short:right-[6%] short:mx-0 short:mt-0 short:aspect-auto short:w-[32%] short:max-w-none short:rounded-none">
         <Image
           src="/images/hero-portrait.webp"
           alt="Hariharan"

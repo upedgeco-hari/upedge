@@ -23,6 +23,7 @@ export const services: Service[] = [
   {
     slug: "residential-construction",
     title: "Residential Construction",
+    searchTitle: "House Construction in Madurai",
     short: "Custom homes, villas and apartment buildings, built to your plans and your budget.",
     intro:
       "From a single-family home on your own plot to a multi-unit residential building, we take care of design coordination, approvals and construction under one accountable team.",
@@ -53,6 +54,7 @@ export const services: Service[] = [
   {
     slug: "commercial-construction",
     title: "Commercial Construction",
+    searchTitle: "Commercial Construction in Madurai",
     short: "Offices, retail and mixed-use buildings delivered with tight schedule control.",
     intro:
       "Commercial projects live and die by programme and coordination. We plan the sequence of trades carefully so your building is ready when your business needs it.",
@@ -83,6 +85,7 @@ export const services: Service[] = [
   {
     slug: "interiors-and-fit-outs",
     title: "Interiors & Fit-outs",
+    searchTitle: "Interior Design & Fit-outs in Madurai",
     short: "Considered interiors for homes, offices and retail, from joinery to lighting.",
     intro:
       "Interiors are where a building is experienced every day. We design, detail and deliver fit-outs with the same discipline we bring to structure.",
@@ -112,6 +115,7 @@ export const services: Service[] = [
   {
     slug: "architectural-planning",
     title: "Architectural Planning",
+    searchTitle: "Architectural Planning & House Design in Madurai",
     short: "Concept design, drawings and 3D visuals that turn a brief into a buildable plan.",
     intro:
       "A good plan saves money long before the first brick. We develop layouts, drawings and visuals that you can understand, and that a site team can build from.",
@@ -141,6 +145,7 @@ export const services: Service[] = [
   {
     slug: "project-management",
     title: "Project Management",
+    searchTitle: "Construction Project Management in Madurai",
     short: "Independent supervision, budgeting and quality control for builds you manage yourself.",
     intro:
       "If you have your own contractors or are building at a distance, we act as your site-side team: planning, supervising, reporting and protecting your interests.",
@@ -171,6 +176,7 @@ export const services: Service[] = [
   {
     slug: "landscaping",
     title: "Landscaping",
+    searchTitle: "Landscaping in Madurai",
     short: "Front gardens, planters, paving and outdoor lighting designed together with the house.",
     intro:
       "The outdoor space is part of the home. We plan planting, paving, boundary and lighting alongside the architecture, so the house and its surroundings read as one design.",

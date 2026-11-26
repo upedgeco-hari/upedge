@@ -11,8 +11,8 @@ import { isLive } from "@/lib/cloudinary";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "About",
-  description: "UPEDGE is a construction company that brings design, approvals and building under one accountable team.",
+  title: "About Our Construction Company in Madurai",
+  description: "UPEDGE, established in 2020 in Madurai and led by Hariharan, brings design, approvals and building under one accountable team.",
   path: "/about",
 });
 

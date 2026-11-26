@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const s = getService(slug);
   if (!s) return {};
-  return buildMetadata({ title: s.title, description: s.short, path: `/services/${s.slug}` });
+  return buildMetadata({ title: s.searchTitle, description: `${s.short} Serving ${site.city} and Tamil Nadu.`, path: `/services/${s.slug}` });
 }
 
 export default async function ServicePage({ params }: Props) {

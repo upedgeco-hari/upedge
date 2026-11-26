@@ -6,8 +6,8 @@ import { getAllProjects } from "@/lib/projects";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "Projects",
-  description: "Homes and interiors by UPEDGE: photos from our sites and 3D house designs.",
+  title: "House Designs & Projects in Madurai",
+  description: "House construction and interior projects by UPEDGE in Madurai and Tamil Nadu: site photos and 3D house designs.",
   path: "/projects",
 });
 

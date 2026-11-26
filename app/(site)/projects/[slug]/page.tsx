@@ -31,9 +31,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const p = await getProjectBySlug(slug);
   if (!p) return {};
+  const what = p.category === "Interiors" ? "interior project" : p.kind === "design" ? "3D house design" : "house construction";
   return buildMetadata({
-    title: `${p.title}, ${p.category} project`,
-    description: p.summary,
+    title: `${p.title}, ${what}${p.location ? ` in ${p.location}` : ""}`,
+    description: `${p.summary} By ${site.name}, builders in ${site.city}.`,
     path: `/projects/${p.slug}`,
     image: shareImage(p.cover),
     type: "article",

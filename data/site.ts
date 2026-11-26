@@ -6,8 +6,12 @@ import type { Media } from "@/lib/types";
 export const site = {
   name: "UPEDGE",
   tagline: "A pinnacle of premium construction",
+  /** The name used on Instagram, so a search for it finds the site too. */
+  alternateName: "UPEDGE Construction",
+  founder: "Hariharan",
+  foundingYear: "2020",
   description:
-    "UPEDGE designs and builds residential, commercial and interior projects, managed from first sketch to final handover.",
+    "UPEDGE is a construction company in Madurai that designs and builds homes, commercial spaces and interiors, with projects across Tamil Nadu.",
   /** NEXT_PUBLIC_SITE_URL wins; on Vercel the production domain is used when it is not set. */
   url:
     process.env.NEXT_PUBLIC_SITE_URL ||

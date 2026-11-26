@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { services } from "@/data/services";
 import { site, hasNumber, serviceAreas } from "@/data/site";
 import { imageUrl, isLive, ogImageUrl } from "@/lib/cloudinary";
 import type { Media } from "@/lib/types";
@@ -23,6 +24,8 @@ export function shareImage(m: Media): ShareImage | undefined {
 
 type Args = {
   title: string;
+  /** Use the title as written, without the " | UPEDGE" suffix. */
+  absoluteTitle?: boolean;
   description: string;
   path: string;
   /** Use shareImage(cover). Falls back to the generated default. */
@@ -31,11 +34,11 @@ type Args = {
 };
 
 /** Per-page metadata with canonical, Open Graph and Twitter cards. */
-export function buildMetadata({ title, description, path, image, type = "website" }: Args): Metadata {
+export function buildMetadata({ title, absoluteTitle, description, path, image, type = "website" }: Args): Metadata {
   const url = absoluteUrl(path);
   const images = image ? [{ ...image, alt: title }] : undefined;
   return {
-    title,
+    title: absoluteTitle ? { absolute: title } : title,
     description,
     alternates: { canonical: url },
     openGraph: { title, description, url, siteName: site.name, type, images },
@@ -52,6 +55,17 @@ export function organizationJsonLd() {
     "@type": ["Organization", "GeneralContractor"],
     "@id": `${site.url}/#organization`,
     name: site.name,
+    alternateName: site.alternateName,
+    founder: { "@type": "Person", name: site.founder },
+    foundingDate: site.foundingYear,
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Services",
+      itemListElement: services.map((s) => ({
+        "@type": "Offer",
+        itemOffered: { "@type": "Service", name: s.title, url: absoluteUrl(`/services/${s.slug}`) },
+      })),
+    },
     slogan: site.tagline,
     description: site.description,
     url: site.url,
@@ -82,6 +96,19 @@ export function organizationJsonLd() {
       closes: site.openingHours.closes,
     },
     sameAs: site.socials.filter((s) => s.href).map((s) => s.href),
+  };
+}
+
+/** Tells search engines the site's name, shown above its results. */
+export function websiteJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${site.url}/#website`,
+    name: site.name,
+    alternateName: site.alternateName,
+    url: site.url,
+    publisher: { "@id": `${site.url}/#organization` },
   };
 }
 

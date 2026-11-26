@@ -7,7 +7,7 @@ import { FloatingContact } from "@/components/layout/FloatingContact";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { site } from "@/data/site";
-import { organizationJsonLd } from "@/lib/seo";
+import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 
 // Brand typeface (logo guideline: Poppins).
 const poppins = Poppins({
@@ -24,6 +24,8 @@ export const metadata: Metadata = {
   applicationName: site.name,
   openGraph: { siteName: site.name, type: "website", locale: "en_IN" },
   twitter: { card: "summary_large_image" },
+  // Google Search Console ownership: set GOOGLE_SITE_VERIFICATION to the code Google gives.
+  verification: { google: process.env.GOOGLE_SITE_VERIFICATION || undefined },
 };
 
 export const viewport: Viewport = {
@@ -45,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main">{children}</main>
         <Footer />
         <FloatingContact />
-        <JsonLd data={organizationJsonLd()} />
+        <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
       </body>
     </html>
   );

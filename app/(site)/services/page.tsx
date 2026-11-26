@@ -9,8 +9,8 @@ import { services } from "@/data/services";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: "Services",
-  description: "Residential and commercial construction, interiors, architectural planning, project management and landscaping from UPEDGE.",
+  title: "Construction Services in Madurai",
+  description: "House and commercial construction, interiors, architectural planning, project management and landscaping in Madurai and Tamil Nadu.",
   path: "/services",
 });
 

@@ -65,6 +65,8 @@ export type ServiceIcon = "house" | "buildings" | "armchair" | "compass" | "kanb
 export type Service = {
   slug: string;
   title: string;
+  /** Page title shown in search results: what someone would type, with the city. */
+  searchTitle: string;
   short: string;
   intro: string;
   icon: ServiceIcon;

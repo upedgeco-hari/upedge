@@ -16,8 +16,9 @@ import { site } from "@/data/site";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
-  title: `${site.name} | ${site.tagline}`,
-  description: site.description,
+  title: `Construction Company in ${site.city} | ${site.name}`,
+  absoluteTitle: true,
+  description: `${site.name} builds homes, commercial spaces and interiors in ${site.city} and across Tamil Nadu: house design, construction and landscaping. Call ${site.phone}.`,
   path: "/",
 });
 
