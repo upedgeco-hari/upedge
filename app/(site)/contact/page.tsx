@@ -1,6 +1,7 @@
 import { Clock, EnvelopeSimple, MapPin, Phone } from "@phosphor-icons/react/dist/ssr";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { ChevronPattern } from "@/components/media/ChevronPattern";
+import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/ui/PageHero";
 import { Reveal } from "@/components/ui/Reveal";
 import { digits, hasNumber, site } from "@/data/site";
@@ -8,7 +9,7 @@ import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
   title: "Contact Builders in Madurai, Free Quote",
-  description: `Get a free construction quote from ${site.name} in Suryanagar, Madurai. Call or WhatsApp ${site.phone}.`,
+  description: `Get a free construction quote from ${site.name} in GR Nagar, Madurai. Call or WhatsApp ${site.phone}.`,
   path: "/contact",
 });
 
@@ -16,7 +17,7 @@ export default function ContactPage() {
   const details = [
     { icon: Phone, label: "Phone", value: site.phone, href: hasNumber(site.phone) ? `tel:+${digits(site.phone)}` : undefined },
     { icon: EnvelopeSimple, label: "Email", value: site.email, href: site.email.includes("@") ? `mailto:${site.email}` : undefined },
-    { icon: MapPin, label: "Office", value: site.address },
+    { icon: MapPin, label: "Office", value: site.address, href: site.mapUrl },
     { icon: Clock, label: "Hours", value: site.hours },
   ];
 
@@ -44,7 +45,7 @@ export default function ContactPage() {
                     <dt className="text-sm text-muted">{label}</dt>
                     <dd className="mt-0.5">
                       {href ? (
-                        <a href={href} className="link-line inline-block">
+                        <a href={href} className="link-line inline-block" {...(href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
                           {value}
                         </a>
                       ) : (
@@ -78,6 +79,11 @@ export default function ContactPage() {
                   </>
                 )}
               </div>
+            </div>
+            <div className="mt-4">
+              <Button href={site.mapUrl} variant="outline">
+                Open in Google Maps
+              </Button>
             </div>
           </Reveal>
         </aside>

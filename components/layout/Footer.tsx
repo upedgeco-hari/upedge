@@ -83,7 +83,7 @@ export function Footer() {
             <ul className="mt-5 space-y-4">
               <ContactLine icon={Phone} label="Phone" value={site.phone} href={hasNumber(site.phone) ? `tel:+${digits(site.phone)}` : undefined} />
               <ContactLine icon={EnvelopeSimple} label="Email" value={site.email} href={site.email.includes("@") ? `mailto:${site.email}` : undefined} />
-              <ContactLine icon={MapPin} label="Office" value={site.address} />
+              <ContactLine icon={MapPin} label="Office" value={site.address} href={site.mapUrl} external />
               {socials.map((s) => (
                 <ContactLine key={s.label} icon={socialIcons[s.label]} label={s.label} value={s.handle || s.label} href={s.href} external />
               ))}

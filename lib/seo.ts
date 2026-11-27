@@ -85,6 +85,8 @@ export function organizationJsonLd() {
           },
         }
       : {}),
+    geo: { "@type": "GeoCoordinates", ...site.geo },
+    hasMap: site.mapUrl,
     areaServed: [
       ...serviceAreas.tamilNadu.map((name) => ({ "@type": "AdministrativeArea", name: `${name}, Tamil Nadu` })),
       ...serviceAreas.elsewhere.map((name) => ({ "@type": "AdministrativeArea", name })),
