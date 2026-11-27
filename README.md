@@ -126,6 +126,10 @@ This rewrites `components/brand/logo-paths.ts`, `app/icon.svg` and `public/brand
 
 ---
 
+## 3D walkthrough videos
+
+A project shows a video when it has `walkthrough` in `data/projects.ts`. Save the video as `public/videos/{slug}.mp4` and a still from it as `public/images/walkthroughs/{slug}.jpg`. The home page lists the ones in `walkthroughSlugs`. Use H.264 MP4 at 720p, ideally under 5 MB.
+
 ## Reel videos
 
 The home page Instagram cards link to Instagram until a video file exists. To play one on the site, save your own video in `public/videos/` with the card's name and rebuild:

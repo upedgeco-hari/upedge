@@ -10,6 +10,7 @@ import { ServicesSection } from "@/components/home/ServicesSection";
 import { SiteWork } from "@/components/home/SiteWork";
 import { Stats } from "@/components/home/Stats";
 import { Testimonials } from "@/components/home/Testimonials";
+import { Walkthroughs } from "@/components/home/Walkthroughs";
 import { WhyUpedge } from "@/components/home/WhyUpedge";
 import { testimonials } from "@/data/testimonials";
 import { site } from "@/data/site";
@@ -30,6 +31,7 @@ export default function HomePage() {
       <AboutPreview />
       <ServicesSection />
       <FeaturedProjects />
+      <Walkthroughs />
       <WhyUpedge />
       <ProcessTimeline />
       <SiteWork />
