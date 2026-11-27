@@ -27,7 +27,7 @@ export default function AboutPage() {
         <Rise className="mx-auto w-full max-w-md lg:col-span-5 lg:max-w-none">
           <figure>
             <div className="bezel">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-inner bg-black short:aspect-square">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-inner short:aspect-square">
                 <CloudImage media={media.founder} sizes="(min-width: 1024px) 38vw, (min-width: 480px) 448px, 100vw" priority />
               </div>
             </div>

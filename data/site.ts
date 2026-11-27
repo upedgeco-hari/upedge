@@ -88,10 +88,10 @@ export const media = {
   },
   founder: {
     publicId: "upedge/site/founder",
-    src: "/images/team/hariharan.jpg",
-    width: 1100,
-    height: 1375,
-    alt: "Hariharan, founder of UPEDGE",
+    src: "/images/team/hariharan-award.jpg",
+    width: 1040,
+    height: 1300,
+    alt: "Hariharan, founder of UPEDGE, holding an award at a ceremony in Coimbatore",
   },
   aboutSecondary: {
     publicId: "upedge/site/about-detail",
