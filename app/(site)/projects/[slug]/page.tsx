@@ -7,6 +7,7 @@ import { CloudImage } from "@/components/media/CloudImage";
 import { BeforeAfter } from "@/components/projects/BeforeAfter";
 import { ProjectCard } from "@/components/projects/ProjectCard";
 import { ProjectStory } from "@/components/projects/ProjectStory";
+import { WalkthroughPlayer } from "@/components/projects/WalkthroughPlayer";
 import { BackLink } from "@/components/ui/BackLink";
 import { Button } from "@/components/ui/Button";
 import { Parallax } from "@/components/ui/Parallax";
@@ -16,6 +17,7 @@ import { Rise } from "@/components/ui/Rise";
 import { projects as staticProjects } from "@/data/projects";
 import { getService } from "@/data/services";
 import { cta, site } from "@/data/site";
+import { cn } from "@/lib/cn";
 import { isLive } from "@/lib/cloudinary";
 import { projectEnquiry, quoteHref } from "@/lib/enquiry";
 import { getProjectBySlug, getRelated } from "@/lib/projects";
@@ -51,6 +53,8 @@ export default async function ProjectPage({ params }: Props) {
   // Portrait covers sit beside the title: stretched full-bleed they would lose most of the house.
   const portrait = (project.cover.height ?? 0) > (project.cover.width ?? 0);
   const photos = project.images.filter((img) => mediaUrl(img));
+  const video = project.walkthrough;
+  const tallVideo = !!video && video.height > video.width;
 
   // Only facts that are actually known are shown.
   const facts = [
@@ -148,6 +152,21 @@ export default async function ProjectPage({ params }: Props) {
         )}
       </section>
 
+      {/* Walkthrough video */}
+      {video && (
+        <section className="section-pb container-x">
+          <SectionHeader eyebrow="3D walkthrough" title="See it from every side" size="sm" />
+          {/* A tall video is kept narrow enough to be seen whole on the screen. */}
+          <Reveal variant="media" delay={0.1} className={cn("block-gap", tallVideo && "mx-auto max-w-[min(100%,45dvh)]")}>
+            <WalkthroughPlayer
+              title={project.title}
+              walkthrough={video}
+              sizes={tallVideo ? "(min-width: 640px) 420px, 100vw" : "(min-width: 1280px) 1200px, 100vw"}
+            />
+          </Reveal>
+        </section>
+      )}
+
       {/* Image story (scroll-driven, with browse mode) */}
       <ProjectStory project={project} />
 
@@ -216,6 +235,20 @@ export default async function ProjectPage({ params }: Props) {
                 }))
               : undefined,
           },
+          ...(video
+            ? [
+                {
+                  "@context": "https://schema.org",
+                  "@type": "VideoObject",
+                  name: `${project.title}: 3D walkthrough`,
+                  description: project.summary,
+                  thumbnailUrl: absoluteUrl(video.poster),
+                  contentUrl: absoluteUrl(video.src),
+                  uploadDate: "2026-11-27",
+                  duration: `PT${video.seconds}S`,
+                },
+              ]
+            : []),
         ]}
       />
     </>

@@ -34,6 +34,18 @@ export type Comparison = {
   lead: string;
 };
 
+/** An animated walk around one project, as an MP4 in public/videos/. */
+export type Walkthrough = {
+  src: string;
+  /** Still shown before the video plays. */
+  poster: string;
+  /** Pixel size of the video, which sets the shape of its frame. */
+  width: number;
+  height: number;
+  /** Length in seconds. */
+  seconds: number;
+};
+
 export type Project = {
   slug: string;
   title: string;
@@ -58,6 +70,7 @@ export type Project = {
   comparison?: Comparison;
   /** Service slugs used on this project. */
   services?: string[];
+  walkthrough?: Walkthrough;
 };
 
 export type ServiceIcon = "house" | "buildings" | "armchair" | "compass" | "kanban" | "plant";

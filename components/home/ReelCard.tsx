@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowUpRight, InstagramLogo, Play, X } from "@phosphor-icons/react/dist/ssr";
-import { useEffect, useRef, useState } from "react";
-import { setScrollLocked } from "@/lib/scroll-lock";
+import { ArrowUpRight, InstagramLogo, Play } from "@phosphor-icons/react/dist/ssr";
+import { useState } from "react";
+import { VideoDialog } from "@/components/media/VideoDialog";
 
 type Props = {
   caption: string;
@@ -19,19 +19,6 @@ const card =
 
 export function ReelCard({ caption, href, poster, video }: Props) {
   const [open, setOpen] = useState(false);
-  const dialog = useRef<HTMLDialogElement>(null);
-
-  // A native modal dialog: focus stays inside, Esc closes it, and the video only exists while open.
-  useEffect(() => {
-    if (!open) return;
-    dialog.current?.showModal();
-    document.documentElement.style.overflow = "hidden";
-    setScrollLocked(true);
-    return () => {
-      document.documentElement.style.overflow = "";
-      setScrollLocked(false);
-    };
-  }, [open]);
 
   const body = (
     <>
@@ -78,33 +65,11 @@ export function ReelCard({ caption, href, poster, video }: Props) {
         {body}
       </button>
       {open && (
-        <dialog
-          ref={dialog}
-          aria-label={caption}
-          onClose={() => setOpen(false)}
-          // A tap on the dark area around the video closes it.
-          onClick={(e) => e.target === e.currentTarget && dialog.current?.close()}
-          data-lenis-prevent
-          data-inverse
-          className="m-auto max-h-[100dvh] max-w-[100vw] overflow-visible bg-transparent p-4 text-on-inverse backdrop:bg-black/85"
-        >
-          <div className="flex flex-col items-center gap-3">
-            <button
-              type="button"
-              aria-label="Close video"
-              onClick={() => dialog.current?.close()}
-              className="grid size-11 place-items-center self-end rounded-full bg-on-inverse/15 transition-colors duration-300 hover:bg-on-inverse hover:text-inverse"
-            >
-              <X size={20} weight="light" />
-            </button>
-            <video src={video} poster={poster} controls autoPlay playsInline className="max-h-[calc(100dvh-8rem)] max-w-full rounded-card bg-black">
-              Your browser cannot play this video.
-            </video>
-            <a href={href} target="_blank" rel="noopener noreferrer" className="link-line inline-block text-sm text-on-inverse">
-              View on Instagram
-            </a>
-          </div>
-        </dialog>
+        <VideoDialog label={caption} src={video} poster={poster} onClose={() => setOpen(false)}>
+          <a href={href} target="_blank" rel="noopener noreferrer" className="link-line inline-block text-sm text-on-inverse">
+            View on Instagram
+          </a>
+        </VideoDialog>
       )}
     </>
   );

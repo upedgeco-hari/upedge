@@ -1,4 +1,4 @@
-import type { Comparison, Media, Project, ProjectImage } from "@/lib/types";
+import type { Comparison, Media, Project, ProjectImage, Walkthrough } from "@/lib/types";
 
 /**
  * HOW TO ADD A PROJECT
@@ -52,6 +52,11 @@ function project({ shots, coverFile, compare, ...rest }: Seed): Project {
     comparison = { ...text, before: find(files[0]), after: find(files[1]) };
   }
   return { ...rest, status: "live", images, cover, comparison };
+}
+
+/** public/videos/{slug}.mp4, with its still in public/images/walkthroughs/{slug}.jpg */
+function walkthrough(slug: string, [width, height]: readonly [number, number], seconds: number): Walkthrough {
+  return { src: `/videos/${slug}.mp4`, poster: `/images/walkthroughs/${slug}.jpg`, width, height, seconds };
 }
 
 const portrait = [1440, 1800] as const;
@@ -155,6 +160,7 @@ export const projects: Project[] = [
     ],
     services: ["residential-construction", "architectural-planning"],
     coverFile: "day-front",
+    walkthrough: walkthrough("tiled-roof-house", wide, 31),
     shots: [
       { file: "day-front", stage: "Front", caption: "The front elevation in daylight.", size: wide, position: "10% 50%" },
       { file: "day-corner", stage: "Corner", caption: "The car porch and upper decks from an angle.", size: wide },
@@ -255,6 +261,7 @@ export const projects: Project[] = [
     ],
     services: ["residential-construction", "architectural-planning", "landscaping"],
     coverFile: "approach",
+    walkthrough: walkthrough("garden-gable-house", still, 30),
     shots: [
       { file: "approach", stage: "Approach", caption: "The drive, steps and lit garden.", size: feed, position: "50% 65%" },
       { file: "night-street", stage: "Night", caption: "The house from the road after dark.", size: feed, position: "50% 65%" },
@@ -301,6 +308,7 @@ export const projects: Project[] = [
     ],
     services: ["residential-construction", "architectural-planning"],
     coverFile: "night-front",
+    walkthrough: walkthrough("floating-frame-house", still, 9),
     shots: [
       { file: "day-front", stage: "Daylight", caption: "The front elevation under a clear sky.", size: tall, position: "50% 62%" },
       { file: "rain-front", stage: "Rain", caption: "A rainy evening, with the interiors lit.", size: tall, position: "50% 62%" },
@@ -493,6 +501,9 @@ export const projects: Project[] = [
 ];
 
 export const categories: Project["category"][] = ["Residential", "Commercial", "Interiors"];
+
+/** Home page walkthroughs, in this order. The wide one comes first. */
+export const walkthroughSlugs = ["tiled-roof-house", "garden-gable-house", "floating-frame-house"];
 
 /** Featured on the home page, in this order. */
 export const featuredSlugs = [
