@@ -19,18 +19,20 @@ export const site = {
   email: "upedge.co@gmail.com",
   phone: "+91 90474 44614",
   whatsapp: "+91 90474 44614",
-  address: "Meenakshiamman Nagar 4th Street Mainroad, Suryanagar, Madurai, Tamil Nadu 625007",
+  address: "GR Nagar E St, GR Nagar, Madurai, Tamil Nadu 625007",
   /** Structured parts, used for the LocalBusiness schema. */
-  street: "Meenakshiamman Nagar 4th Street Mainroad, Suryanagar",
+  street: "GR Nagar E St, GR Nagar",
   city: "Madurai",
   region: "Tamil Nadu",
   postalCode: "625007",
   country: "IN",
-  hours: "Monday to Saturday, 10:30am to 8:30pm. Sunday closed.",
+  hours: "Monday to Saturday, 11am to 8:30pm. Sunday closed.",
   /** Same hours in machine-readable form (24h), used for Google. */
-  openingHours: { days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], opens: "10:30", closes: "20:30" },
-  /** Google Maps embed (no API key needed). Replace with a share-to-embed URL if you want a pinned listing. */
-  mapEmbedUrl: "https://www.google.com/maps?q=Meenakshiamman+Nagar+4th+Street+Mainroad,+Suryanagar,+Madurai,+Tamil+Nadu+625007&output=embed",
+  openingHours: { days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], opens: "11:00", closes: "20:30" },
+  /** The "Upedge" listing on Google Maps: the link opens it, the embed shows its pin. */
+  mapUrl: "https://maps.app.goo.gl/RRQhcmSkYs4jYGVGA",
+  mapEmbedUrl: "https://www.google.com/maps?cid=18389204391656182844&output=embed",
+  geo: { latitude: 9.9597117, longitude: 78.1448743 },
   /** Leave href empty to hide a network. */
   socials: [
     { label: "Instagram", href: "https://www.instagram.com/upedge_co/", handle: "@upedge_co" },
@@ -83,6 +85,13 @@ export const media = {
     height: 1800,
     position: "50% 66%",
     alt: "3D design of a UPEDGE house with grey plaster, a steel balcony and a terracotta tile wall",
+  },
+  founder: {
+    publicId: "upedge/site/founder",
+    src: "/images/team/hariharan-award.jpg",
+    width: 1040,
+    height: 1300,
+    alt: "Hariharan, founder of UPEDGE, holding an award at a ceremony in Coimbatore",
   },
   aboutSecondary: {
     publicId: "upedge/site/about-detail",

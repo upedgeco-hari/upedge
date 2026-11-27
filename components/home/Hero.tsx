@@ -54,13 +54,18 @@ export function Hero() {
       {/* Portrait: contained card below lg (sized by screen height, so the buttons stay in view),
           positioned cutout beside the headline from lg up and on a sideways phone. */}
       <div className="relative z-10 order-2 mx-auto mt-6 aspect-[2/3] w-[min(70%,27dvh)] max-w-64 overflow-hidden rounded-card sm:max-w-xs md:max-w-sm lg:absolute lg:inset-y-0 lg:right-[max(2%,calc((100%-var(--container))/2))] lg:order-0 lg:mx-0 lg:mt-0 lg:mb-0 lg:aspect-auto lg:w-[38%] lg:max-w-none lg:rounded-none xl:w-[36%] xl:max-w-[44rem] short:absolute short:inset-y-0 short:right-[6%] short:mx-0 short:mt-0 short:aspect-auto short:w-[32%] short:max-w-none short:rounded-none">
+        {/*
+         * The file is already sized and compressed for this slot, so it is served as is:
+         * resizing it on the server would make the first visitor wait. Fetched ahead of
+         * other images because it is the first thing seen.
+         */}
         <Image
           src="/images/hero-portrait.webp"
           alt="Hariharan"
           fill
-          priority
-          quality={85}
-          sizes="(min-width: 1280px) 36vw, (min-width: 1024px) 38vw, (min-width: 768px) 384px, 320px"
+          unoptimized
+          loading="eager"
+          fetchPriority="high"
           className="object-contain object-bottom"
         />
       </div>

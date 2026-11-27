@@ -3,11 +3,8 @@
 import { useInView, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { CloudImage } from "@/components/media/CloudImage";
-import { cn } from "@/lib/cn";
+import { SLIDE_MS, Slideshow } from "@/components/media/Slideshow";
 import type { Service } from "@/lib/types";
-
-/** Time each photo stays before the next one fades in. */
-const SLIDE_MS = 1200;
 
 type Props = {
   service: Pick<Service, "image" | "gallery">;
@@ -35,19 +32,9 @@ export function ServiceImage({ service, sizes, priority }: Props) {
 
   if (count < 2) return <CloudImage media={frames[0]} sizes={sizes} priority={priority} />;
 
-  const previous = (step - 1 + count) % count;
   return (
-    <div ref={ref} className="absolute inset-0">
-      {frames.map((frame, i) => (
-        // The outgoing photo stays solid underneath while the next one fades in over it.
-        <div
-          key={frame.publicId}
-          className={cn("absolute inset-0", i === step ? "z-[2] opacity-100 transition-opacity duration-500 ease-smooth" : i === previous ? "z-[1] opacity-100" : "opacity-0")}
-          aria-hidden={i !== step}
-        >
-          <CloudImage media={frame} sizes={sizes} priority={priority} />
-        </div>
-      ))}
+    <div ref={ref} className="absolute inset-0 overflow-hidden">
+      <Slideshow frames={frames} step={step} sizes={sizes} priority={priority} />
     </div>
   );
 }

@@ -87,8 +87,10 @@ export function Button({ children, href, variant = "primary", arrow = true, size
     </>
   );
   if (href) {
+    // Links to other sites open in a new tab, so the visitor keeps this one.
+    const external = href.startsWith("http");
     return (
-      <Link href={href} className={classes}>
+      <Link href={href} className={classes} {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
         {inner}
       </Link>
     );

@@ -1,13 +1,11 @@
 import Image from "next/image";
 import { CtaBanner } from "@/components/home/CtaBanner";
 import { CloudImage } from "@/components/media/CloudImage";
-import { Parallax } from "@/components/ui/Parallax";
 import { PageHero } from "@/components/ui/PageHero";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Rise } from "@/components/ui/Rise";
 import { companyTimeline, media, site, values } from "@/data/site";
-import { isLive } from "@/lib/cloudinary";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata = buildMetadata({
@@ -26,22 +24,29 @@ export default function AboutPage() {
 
       {/* Story */}
       <section className="section-pb container-x grid items-center gap-12 lg:grid-cols-12 lg:gap-8">
-        <Rise className="lg:col-span-7">
-          <div className="bezel">
-            <div className="relative aspect-[4/3] overflow-hidden rounded-inner">
-              <Parallax distance={70} scale={1.1} disabled={!isLive(media.about)}>
-                <CloudImage media={media.about} sizes="(min-width: 1024px) 58vw, 100vw" priority />
-              </Parallax>
+        <Rise className="mx-auto w-full max-w-md lg:col-span-5 lg:max-w-none">
+          <figure>
+            <div className="bezel">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-inner short:aspect-square">
+                <CloudImage media={media.founder} sizes="(min-width: 1024px) 38vw, (min-width: 480px) 448px, 100vw" priority />
+              </div>
             </div>
-          </div>
+            <figcaption className="mt-4 flex items-center gap-3">
+              <span className="h-px w-9 shrink-0 bg-accent" aria-hidden="true" />
+              <span>
+                <span className="font-medium">{site.founder}</span>
+                <span className="text-muted">, Founder &amp; CEO</span>
+              </span>
+            </figcaption>
+          </figure>
         </Rise>
-        <div className="space-y-6 lg:col-span-4 lg:col-start-9">
+        <div className="space-y-6 lg:col-span-6 lg:col-start-7">
           <Reveal>
             <h2 className="display-3 text-balance">Our story</h2>
           </Reveal>
           <Reveal delay={0.08}>
             <p className="text-ink-2">
-              {site.name} was established in 2020 and works from Suryanagar, Madurai. Led by founder Hariharan, the company takes on planning, construction, interiors, design and landscaping.
+              {site.name} was established in 2020 and works from GR Nagar, Madurai. Led by founder Hariharan, the company takes on planning, construction, interiors, design and landscaping.
             </p>
           </Reveal>
           <Reveal delay={0.16}>

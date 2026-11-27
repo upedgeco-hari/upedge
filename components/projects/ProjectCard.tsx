@@ -5,13 +5,10 @@ import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { AnimatePresence, motion, useInView, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { CloudImage } from "@/components/media/CloudImage";
+import { crossfade, SLIDE_MS, Slideshow } from "@/components/media/Slideshow";
 import { cn } from "@/lib/cn";
 import type { Project } from "@/lib/types";
 import { useMediaQuery } from "@/lib/useMediaQuery";
-
-/** Time each image stays before the next one fades in. */
-const SLIDE_MS = 1200;
-const fade = { duration: 0.6, ease: [0.32, 0.72, 0, 1] as const };
 
 type Props = {
   project: Project;
@@ -69,17 +66,8 @@ export function ProjectCard({ project, aspect = "aspect-[4/3]", sizes = "(min-wi
 
             <AnimatePresence initial={false}>
               {active && (
-                <motion.div className="absolute inset-0" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={fade} aria-hidden="true">
-                  {/* The next image loads out of sight, so it is ready when its turn comes. */}
-                  <div className="absolute inset-0 opacity-0">
-                    <CloudImage key={frames[(step + 1) % count].publicId} media={frames[(step + 1) % count]} sizes={sizes} />
-                  </div>
-                  <AnimatePresence initial={false}>
-                    {/* The outgoing image stays solid while the next one fades in over it. */}
-                    <motion.div key={frames[step].publicId} className="absolute inset-0" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0.99 }} transition={fade}>
-                      <CloudImage media={frames[step]} sizes={sizes} priority={priority} />
-                    </motion.div>
-                  </AnimatePresence>
+                <motion.div className="absolute inset-0" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={crossfade} aria-hidden="true">
+                  <Slideshow frames={frames} step={step} sizes={sizes} priority={priority} />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -89,7 +77,7 @@ export function ProjectCard({ project, aspect = "aspect-[4/3]", sizes = "(min-wi
           <div className={cn("pointer-events-none absolute inset-x-4 bottom-4 flex gap-1 transition-opacity duration-500", active ? "opacity-100" : "opacity-0")} aria-hidden="true">
             {frames.map((f, i) => (
               <span key={f.publicId} className="h-0.5 flex-1 rounded-full bg-on-inverse/40">
-                <span className={cn("block h-full rounded-full bg-accent transition-transform duration-500", i <= step && active ? "scale-x-100" : "scale-x-0")} style={{ transformOrigin: "left" }} />
+                <span className={cn("block h-full origin-left rounded-full bg-accent transition-transform ease-linear", i === step ? "duration-[1200ms]" : "duration-300", i <= step && active ? "scale-x-100" : "scale-x-0")} />
               </span>
             ))}
           </div>
